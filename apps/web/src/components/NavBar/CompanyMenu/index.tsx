@@ -26,6 +26,14 @@ const ArrowDownWrapper = styled(Text, {
   },
 });
 
+const HyperOrbitLogoIcon = ({ height = 24 }: { height: number }) => {
+  return <img src="/images/logo-icon.png" alt="logo" height={height} />;
+};
+
+const HyperOrbitLogo = ({ height = 24 }: { height: number }) => {
+  return <img src="/images/logo.png" alt="logo" height={height} />;
+};
+
 export function CompanyMenu() {
   const popoverRef = useRef<Popover>(null);
   const media = useMedia();
@@ -73,10 +81,10 @@ export function CompanyMenu() {
                   data-testid={TestID.NavUniswapLogo}
                 >
                   {/* <NavIcon /> */}
-                  {isLargeScreen && (
-                    <Text variant="heading3" color="$white" userSelect="none">
-                      Hyper Orbit
-                    </Text>
+                  {isLargeScreen ? (
+                    <HyperOrbitLogo height={24} />
+                  ) : (
+                    <HyperOrbitLogoIcon height={24} />
                   )}
                 </Flex>
               </Link>
@@ -115,11 +123,7 @@ export function CompanyMenu() {
               data-testid={TestID.NavUniswapLogo}
             >
               {/* <NavIcon /> */}
-              {isLargeScreen && (
-                <Text variant="heading3" color="$white" userSelect="none">
-                  Hyper Orbit
-                </Text>
-              )}
+              <HyperOrbitLogo height={24} />
             </Flex>
           </Link>
           <MenuDropdown close={closeMenu} />

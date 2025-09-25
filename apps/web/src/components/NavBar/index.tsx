@@ -65,7 +65,7 @@ export default function Navbar() {
 
   return (
     <Nav>
-      <UnpositionedFlex row centered width="100%">
+      <UnpositionedFlex p="$spacing40" row centered width="100%">
         <Left>
           <CompanyMenu />
           {/* {areTabsVisible && <Tabs />} */}
