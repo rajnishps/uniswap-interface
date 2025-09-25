@@ -1,52 +1,67 @@
-import { MenuState, miniPortfolioMenuStateAtom } from 'components/AccountDrawer/constants'
-import { useShowMoonpayText } from 'components/AccountDrawer/MiniPortfolio/hooks'
-import { downloadAppModalPageAtom, Page } from 'components/NavBar/DownloadApp/Modal'
-import ConnectionErrorView from 'components/WalletModal/ConnectionErrorView'
-import { DownloadWalletRow } from 'components/WalletModal/DownloadWalletRow'
-import PrivacyPolicyNotice from 'components/WalletModal/PrivacyPolicyNotice'
-import { UniswapMobileWalletConnectorOption } from 'components/WalletModal/UniswapMobileWalletConnectorOption'
-import { UniswapWalletOptions } from 'components/WalletModal/UniswapWalletOptions'
-import { OtherWalletsOption, WalletConnectorOption } from 'components/WalletModal/WalletConnectorOption'
-import { useRecentConnectorId } from 'components/Web3Provider/constants'
-import { useOrderedWalletConnectors } from 'features/wallet/connection/hooks/useOrderedWalletConnectors'
-import { useModalState } from 'hooks/useModalState'
-import { useAtom } from 'jotai'
-import { Fragment, useReducer } from 'react'
-import { Trans, useTranslation } from 'react-i18next'
-import { ClickableTamaguiStyle } from 'theme/components/styles'
-import { transitions } from 'theme/styles'
-import { Flex, Separator, Text } from 'ui/src'
-import { DoubleChevron } from 'ui/src/components/icons/DoubleChevron'
-import { DoubleChevronInverted } from 'ui/src/components/icons/DoubleChevronInverted'
-import { UniswapLogo } from 'ui/src/components/icons/UniswapLogo'
-import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { isMobileWeb } from 'utilities/src/platform'
-import { useEvent } from 'utilities/src/react/hooks'
+import {
+  MenuState,
+  miniPortfolioMenuStateAtom,
+} from "components/AccountDrawer/constants";
+import { useShowMoonpayText } from "components/AccountDrawer/MiniPortfolio/hooks";
+import {
+  downloadAppModalPageAtom,
+  Page,
+} from "components/NavBar/DownloadApp/Modal";
+import ConnectionErrorView from "components/WalletModal/ConnectionErrorView";
+import { DownloadWalletRow } from "components/WalletModal/DownloadWalletRow";
+import PrivacyPolicyNotice from "components/WalletModal/PrivacyPolicyNotice";
+import { UniswapMobileWalletConnectorOption } from "components/WalletModal/UniswapMobileWalletConnectorOption";
+import { UniswapWalletOptions } from "components/WalletModal/UniswapWalletOptions";
+import {
+  OtherWalletsOption,
+  WalletConnectorOption,
+} from "components/WalletModal/WalletConnectorOption";
+import { useRecentConnectorId } from "components/Web3Provider/constants";
+import { useOrderedWalletConnectors } from "features/wallet/connection/hooks/useOrderedWalletConnectors";
+import { useModalState } from "hooks/useModalState";
+import { useAtom } from "jotai";
+import { Fragment, useReducer } from "react";
+import { Trans, useTranslation } from "react-i18next";
+import { ClickableTamaguiStyle } from "theme/components/styles";
+import { transitions } from "theme/styles";
+import { Flex, Separator, Text } from "ui/src";
+import { DoubleChevron } from "ui/src/components/icons/DoubleChevron";
+import { DoubleChevronInverted } from "ui/src/components/icons/DoubleChevronInverted";
+import { UniswapLogo } from "ui/src/components/icons/UniswapLogo";
+import { CONNECTION_PROVIDER_IDS } from "uniswap/src/constants/web3";
+import { FeatureFlags } from "uniswap/src/features/gating/flags";
+import { useFeatureFlag } from "uniswap/src/features/gating/hooks";
+import { ModalName } from "uniswap/src/features/telemetry/constants";
+import { isMobileWeb } from "utilities/src/platform";
+import { useEvent } from "utilities/src/react/hooks";
 
 export default function WalletModal() {
-  const { t } = useTranslation()
-  const showMoonpayText = useShowMoonpayText()
-  const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
-  const [expandMoreWallets, toggleExpandMoreWallets] = useReducer((s) => !s, true)
-  const [, setMenu] = useAtom(miniPortfolioMenuStateAtom)
+  const { t } = useTranslation();
+  const showMoonpayText = useShowMoonpayText();
+  const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet);
+  const [expandMoreWallets, toggleExpandMoreWallets] = useReducer(
+    (s) => !s,
+    true
+  );
+  const [, setMenu] = useAtom(miniPortfolioMenuStateAtom);
 
-  const connectors = useOrderedWalletConnectors({ showSecondaryConnectors: isMobileWeb })
-  const recentConnectorId = useRecentConnectorId()
+  const connectors = useOrderedWalletConnectors({
+    showSecondaryConnectors: isMobileWeb,
+  });
+  const recentConnectorId = useRecentConnectorId();
 
-  const showDownloadHeader =
-    !connectors.some((c) => c.wagmi?.id === CONNECTION_PROVIDER_IDS.UNISWAP_EXTENSION_RDNS) &&
-    recentConnectorId !== CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID &&
-    isEmbeddedWalletEnabled
-  const { openModal: openGetTheAppModal } = useModalState(ModalName.GetTheApp)
-  const [, setPage] = useAtom(downloadAppModalPageAtom)
+  // const showDownloadHeader =
+  //   !connectors.some((c) => c.wagmi?.id === CONNECTION_PROVIDER_IDS.UNISWAP_EXTENSION_RDNS) &&
+  //   recentConnectorId !== CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID &&
+  //   isEmbeddedWalletEnabled
+  const showDownloadHeader = false;
+  const { openModal: openGetTheAppModal } = useModalState(ModalName.GetTheApp);
+  const [, setPage] = useAtom(downloadAppModalPageAtom);
   const handleOpenGetTheAppModal = useEvent(() => {
-    openGetTheAppModal()
-    setPage(Page.GetApp)
-  })
-  const px = 12
+    openGetTheAppModal();
+    setPage(Page.GetApp);
+  });
+  const px = 12;
 
   return (
     <Flex
@@ -60,7 +75,7 @@ export default function WalletModal() {
     >
       <ConnectionErrorView />
       {showDownloadHeader && (
-        <Flex display="flex" $md={{ display: 'none' }}>
+        <Flex display="flex" $md={{ display: "none" }}>
           <DownloadWalletRow
             onPress={handleOpenGetTheAppModal}
             mx={-8}
@@ -73,18 +88,24 @@ export default function WalletModal() {
           />
         </Flex>
       )}
-      <Flex row justifyContent={isEmbeddedWalletEnabled ? 'center' : 'space-between'} width="100%">
+      {/* <Flex
+        row
+        justifyContent={isEmbeddedWalletEnabled ? "center" : "space-between"}
+        width="100%"
+      >
         <Text variant="subheading2">
-          {isEmbeddedWalletEnabled ? t('nav.logInOrConnect.title') : t('common.connectAWallet.button')}
+          {isEmbeddedWalletEnabled
+            ? t("nav.logInOrConnect.title")
+            : t("common.connectAWallet.button")}
         </Text>
-      </Flex>
-      {isEmbeddedWalletEnabled ? (
+      </Flex> */}
+      {/* {isEmbeddedWalletEnabled ? (
         <Flex justifyContent="center" alignItems="center" py={8}>
           <UniswapLogo size={48} color="$accent1" />
         </Flex>
       ) : (
         <UniswapWalletOptions />
-      )}
+      )} */}
       {isEmbeddedWalletEnabled ? null : (
         <Flex
           row
@@ -114,12 +135,14 @@ export default function WalletModal() {
             borderRadius="$rounded16"
             overflow="hidden"
             width="100%"
-            maxHeight={expandMoreWallets ? '100vh' : 0}
+            maxHeight={expandMoreWallets ? "100vh" : 0}
             opacity={expandMoreWallets ? 1 : 0}
             transition={`${transitions.duration.fast} ${transitions.timing.inOut}`}
             data-testid="option-grid"
           >
-            {(recentConnectorId === CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID || isMobileWeb) &&
+            {(recentConnectorId ===
+              CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID ||
+              isMobileWeb) &&
               isEmbeddedWalletEnabled && (
                 <>
                   <UniswapMobileWalletConnectorOption />
@@ -129,11 +152,15 @@ export default function WalletModal() {
             {connectors.map((c, index) => (
               <Fragment key={c.name}>
                 <WalletConnectorOption walletConnectorMeta={c} />
-                {index < connectors.length - 1 || isEmbeddedWalletEnabled ? <Separator /> : null}
+                {index < connectors.length - 1 || isEmbeddedWalletEnabled ? (
+                  <Separator />
+                ) : null}
               </Fragment>
             ))}
             {isEmbeddedWalletEnabled && !isMobileWeb && (
-              <OtherWalletsOption onPress={() => setMenu(MenuState.OTHER_WALLETS)} />
+              <OtherWalletsOption
+                onPress={() => setMenu(MenuState.OTHER_WALLETS)}
+              />
             )}
           </Flex>
         </Flex>
@@ -142,7 +169,12 @@ export default function WalletModal() {
             <PrivacyPolicyNotice />
           </Flex>
           {showMoonpayText && (
-            <Flex borderTopWidth={1} pt="$spacing8" borderColor="$surface3" px="$spacing4">
+            <Flex
+              borderTopWidth={1}
+              pt="$spacing8"
+              borderColor="$surface3"
+              px="$spacing4"
+            >
               <Text variant="body4" color="$neutral3">
                 <Trans i18nKey="moonpay.poweredBy" />
               </Text>
@@ -151,7 +183,7 @@ export default function WalletModal() {
         </Flex>
       </Flex>
       {showDownloadHeader && (
-        <Flex display="none" $md={{ display: 'flex' }}>
+        <Flex display="none" $md={{ display: "flex" }}>
           <DownloadWalletRow
             onPress={handleOpenGetTheAppModal}
             mx={-8}
@@ -165,5 +197,5 @@ export default function WalletModal() {
         </Flex>
       )}
     </Flex>
-  )
+  );
 }
