@@ -1,32 +1,32 @@
-import { Hero } from 'pages/Landing/sections/Hero'
-import { lazy, memo, Suspense, useRef } from 'react'
-import { Flex, styled } from 'ui/src'
-import { INTERFACE_NAV_HEIGHT } from 'ui/src/theme'
+import { Hero } from "pages/Landing/sections/Hero";
+import { lazy, memo, Suspense, useRef } from "react";
+import { Flex, styled } from "ui/src";
+import { INTERFACE_NAV_HEIGHT } from "ui/src/theme";
 
 // The Fold is always loaded, but is lazy-loaded because it is not seen without user interaction.
 // Annotating it with webpackPreload allows it to be ready when requested.
-const Fold = lazy(() => import(/* webpackPreload: true */ './Fold'))
+const Fold = lazy(() => import(/* webpackPreload: true */ "./Fold"));
 
-const Rive = lazy(() => import(/* webpackPreload: true */ 'setupRive'))
+const Rive = lazy(() => import(/* webpackPreload: true */ "setupRive"));
 
 const Grain = styled(Flex, {
-  position: 'absolute',
+  position: "absolute",
   inset: 0,
-  background: 'url(/images/noise-color.png)',
+  background: "url(/images/noise-color.png)",
   opacity: 0.018,
   zIndex: 0,
-})
+});
 
 function LandingV2({ transition }: { transition?: boolean }) {
-  const scrollAnchor = useRef<HTMLDivElement | null>(null)
+  const scrollAnchor = useRef<HTMLDivElement | null>(null);
   const scrollToRef = () => {
     if (scrollAnchor.current) {
       window.scrollTo({
         top: scrollAnchor.current.offsetTop - 120,
-        behavior: 'smooth',
-      })
+        behavior: "smooth",
+      });
     }
-  }
+  };
 
   return (
     <Flex
@@ -35,6 +35,14 @@ function LandingV2({ transition }: { transition?: boolean }) {
       mt={-INTERFACE_NAV_HEIGHT}
       minWidth="100vw"
       data-testid="landing-page"
+      background="linear-gradient(
+  to right,
+  #01241d 0%,   
+  #013e33 20%, 
+  #b6fcd5 50%, 
+  #013e33 80%, 
+  #01241d 100% 
+)"
     >
       <Grain />
       <Hero scrollToRef={scrollToRef} transition={transition} />
@@ -43,7 +51,7 @@ function LandingV2({ transition }: { transition?: boolean }) {
         <Fold ref={scrollAnchor} />
       </Suspense>
     </Flex>
-  )
+  );
 }
 
-export default memo(LandingV2)
+export default memo(LandingV2);

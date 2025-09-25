@@ -83,6 +83,14 @@ export function Hero({ scrollToRef, transition }: HeroProps) {
       justifyContent="center"
       y={translateY}
       opacity={opacityY}
+      background="radial-gradient(
+  circle at center bottom,
+  #b6fcd5 0%,    
+  #015042 25%,  
+  #013e33 40%,  
+  #01241d 70%,   
+  #01130f 100%   
+)"
       minWidth="100%"
       minHeight="90vh"
       height="min-content"
