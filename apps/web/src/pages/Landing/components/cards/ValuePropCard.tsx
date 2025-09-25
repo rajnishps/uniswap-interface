@@ -1,28 +1,40 @@
-import { useNavigate } from 'react-router'
-import { Flex, FlexProps, Text } from 'ui/src'
+import { useNavigate } from "react-router";
+import { Flex, FlexProps, Text } from "ui/src";
 
 type ValuePropCardProps = FlexProps & {
-  smaller?: boolean
-  children?: React.ReactNode
-  title?: React.ReactNode
-  subtitle?: string
-  bodyText?: string | React.ReactNode
-  button?: React.ReactNode
-  alignTextToBottom?: boolean
-  href?: string
-  to?: string
-  color?: string
-}
+  smaller?: boolean;
+  children?: React.ReactNode;
+  title?: React.ReactNode;
+  subtitle?: string;
+  bodyText?: string | React.ReactNode;
+  button?: React.ReactNode;
+  alignTextToBottom?: boolean;
+  href?: string;
+  to?: string;
+  color?: string;
+};
 
 export default function ValuePropCard(props: ValuePropCardProps) {
-  const { color, alignTextToBottom, href, to, title, children, bodyText, button, smaller, subtitle, ...rest } = props
-  const navigate = useNavigate()
+  const {
+    color,
+    alignTextToBottom,
+    href,
+    to,
+    title,
+    children,
+    bodyText,
+    button,
+    smaller,
+    subtitle,
+    ...rest
+  } = props;
+  const navigate = useNavigate();
 
   const handleClick = () => {
     if (to) {
-      navigate(to)
+      navigate(to);
     }
-  }
+  };
 
   return (
     <Flex
@@ -44,11 +56,11 @@ export default function ValuePropCard(props: ValuePropCardProps) {
       rel="noreferrer noopener"
       onPress={handleClick}
       $platform-web={{
-        textDecoration: 'none',
+        textDecoration: "none",
       }}
       $lg={{
-        maxWidth: '100%',
-        height: 'auto',
+        maxWidth: "100%",
+        height: "auto",
       }}
       $xl={{
         ...(smaller && {
@@ -56,7 +68,7 @@ export default function ValuePropCard(props: ValuePropCardProps) {
         }),
       }}
       {...(smaller && {
-        pr: '16%',
+        pr: "16%",
       })}
       {...rest}
     >
@@ -64,13 +76,13 @@ export default function ValuePropCard(props: ValuePropCardProps) {
         width="100%"
         flex={1}
         gap={8}
-        p="$spacing48"
+        p="$spacing36"
         alignItems="flex-start"
         zIndex={2}
         pointerEvents="none"
-        justifyContent={alignTextToBottom ? 'space-between' : 'flex-start'}
+        justifyContent={alignTextToBottom ? "space-between" : "flex-start"}
         $xl={{
-          p: '$spacing32',
+          p: "$spacing32",
         }}
         $xs={{
           p: 20,
@@ -80,21 +92,21 @@ export default function ValuePropCard(props: ValuePropCardProps) {
         {subtitle && (
           <Text
             mt="$spacing16"
-            variant="heading2"
+            variant="heading3"
             fontWeight="$true"
             color={color}
             whiteSpace="nowrap"
             overflow="visible"
             $xl={{
-              variant: 'heading3',
+              variant: "heading3",
             }}
             $lg={{
-              variant: 'heading2',
-              whiteSpace: 'normal',
+              variant: "heading2",
+              whiteSpace: "normal",
             }}
             $xs={{
-              variant: 'heading3',
-              mt: '$spacing8',
+              variant: "heading3",
+              mt: "$spacing8",
             }}
           >
             {subtitle}
@@ -102,19 +114,19 @@ export default function ValuePropCard(props: ValuePropCardProps) {
         )}
         <Text
           mb="$spacing24"
-          variant="heading3"
+          variant="heading2"
           color={color}
           $xl={{
-            fontSize: 18,
+            fontSize: 16,
             lineHeight: 24,
           }}
           $lg={{
-            variant: 'heading3',
+            variant: "heading3",
           }}
           $xs={{
             fontSize: 18,
             lineHeight: 24,
-            mb: '$spacing16',
+            mb: "$spacing16",
           }}
         >
           {bodyText}
@@ -123,5 +135,5 @@ export default function ValuePropCard(props: ValuePropCardProps) {
       </Flex>
       {children}
     </Flex>
-  )
+  );
 }

@@ -13,6 +13,8 @@ import { Button, Flex, Text, useMedia } from "ui/src";
 import { INTERFACE_NAV_HEIGHT } from "ui/src/theme";
 import { useEnabledChains } from "uniswap/src/features/chains/hooks/useEnabledChains";
 import { SwapRedirectFn } from "uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext";
+import ValuePropCard from "../components/cards/ValuePropCard";
+import { CardContents } from "../components/cards/CardContents";
 
 interface HeroProps {
   scrollToRef: () => void;
@@ -136,50 +138,86 @@ export function Hero({ scrollToRef, transition }: HeroProps) {
             pointerEvents="auto"
             p="$padding8"
             borderRadius="$rounded24"
-            backgroundColor="$surface1"
+            alignItems="center"
+            justifyContent="center"
+            gap="$gap20"
+            // backgroundColor="$surface1"
             enterStyle={{ opacity: 0 }}
           >
             <Link to="/swap">
-              <Button size="medium" emphasis="secondary" variant="default">
-                Launch Dex
+              <Button
+                backgroundImage="#000"
+                hoverStyle={{
+                  backgroundImage: "#000",
+                }}
+                pressStyle={{
+                  backgroundImage: "#000",
+                }}
+                size="medium"
+                emphasis="secondary"
+                variant="default"
+              >
+                Launch DEX
               </Button>
             </Link>
+
+            <img src="/images/secure.png" width={180} />
+            <Text variant="body4">Security Audited by Packshield</Text>
           </Flex>
         </RiseIn>
       </Flex>
 
-      <Flex flex={1} />
-
       <Flex
-        position="absolute"
-        width="100%"
-        centered
+        alignSelf="center"
+        flexDirection="row"
         pointerEvents="none"
-        bottom={48}
-        style={{
-          transform: `translate(0px, ${translateY}px)`,
-          opacity: opacityY,
+        pt={48}
+        gap={50}
+        // transform={`translate(0px, ${translateY}px)`}
+        opacity={opacityY}
+        $lg={{ pt: 24 }}
+        $sm={{ pt: 8 }}
+        $platform-web={{
+          transition: transition
+            ? "shrinkAndFade 1s ease-in-out forwards"
+            : undefined,
         }}
-        $lgHeight={{ display: "none" }}
       >
-        <RiseIn delay={0.3}>
-          <Flex
-            alignItems="center"
-            justifyContent="flex-start"
-            onPress={() => scrollToRef()}
-            cursor="pointer"
-            width={500}
-          >
-            <Hover>
-              <ColumnCenter>
-                <Text variant="body2">
-                  <Trans i18nKey="hero.scroll" />
-                </Text>
-                <ChevronDown />
-              </ColumnCenter>
-            </Hover>
-          </Flex>
-        </RiseIn>
+        <ValuePropCard
+          backgroundColor="#00000020"
+          width={400}
+          subtitle={"Total Value Locked (TVL)"}
+          bodyText={"$42.7M+"}
+          alignTextToBottom
+        >
+          <CardContents pr="$padding16">
+            <img
+              src="/images/graph1.png"
+              width="35%"
+              height="100%"
+              style={{ objectFit: "contain" }}
+              alt={"Total Value Locked (TVL)"}
+            />
+          </CardContents>
+        </ValuePropCard>
+
+        <ValuePropCard
+          backgroundColor="#00000020"
+          width={400}
+          subtitle={"24h Trading Volume"}
+          bodyText={"$7.9M+"}
+          alignTextToBottom
+        >
+          <CardContents pr="$padding16">
+            <img
+              src="/images/graph2.png"
+              width="35%"
+              height="100%"
+              style={{ objectFit: "contain" }}
+              alt={"24h Trading Volume"}
+            />
+          </CardContents>
+        </ValuePropCard>
       </Flex>
     </Flex>
   );
