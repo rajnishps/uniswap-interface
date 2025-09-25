@@ -1,44 +1,50 @@
-import { ColumnCenter } from 'components/deprecated/Column'
-import { useCurrency } from 'hooks/Tokens'
-import { useScroll } from 'hooks/useScroll'
-import { Hover, RiseIn, RiseInText } from 'pages/Landing/components/animations'
-import { TokenCloud } from 'pages/Landing/components/TokenCloud'
-import { Swap } from 'pages/Swap'
-import { Fragment, useCallback, useMemo } from 'react'
-import { ChevronDown } from 'react-feather'
-import { Trans, useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router'
-import { serializeSwapStateToURLParameters } from 'state/swap/hooks'
-import { Flex, Text, useMedia } from 'ui/src'
-import { INTERFACE_NAV_HEIGHT } from 'ui/src/theme'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { SwapRedirectFn } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
+import { ColumnCenter } from "components/deprecated/Column";
+import { useCurrency } from "hooks/Tokens";
+import { useScroll } from "hooks/useScroll";
+import { Hover, RiseIn, RiseInText } from "pages/Landing/components/animations";
+import { TokenCloud } from "pages/Landing/components/TokenCloud";
+import { Swap } from "pages/Swap";
+import { Fragment, useCallback, useMemo } from "react";
+import { ChevronDown } from "react-feather";
+import { Trans, useTranslation } from "react-i18next";
+import { Link, useNavigate } from "react-router";
+import { serializeSwapStateToURLParameters } from "state/swap/hooks";
+import { Button, Flex, Text, useMedia } from "ui/src";
+import { INTERFACE_NAV_HEIGHT } from "ui/src/theme";
+import { useEnabledChains } from "uniswap/src/features/chains/hooks/useEnabledChains";
+import { SwapRedirectFn } from "uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext";
 
 interface HeroProps {
-  scrollToRef: () => void
-  transition?: boolean
+  scrollToRef: () => void;
+  transition?: boolean;
 }
 
 export function Hero({ scrollToRef, transition }: HeroProps) {
-  const media = useMedia()
-  const { height: scrollPosition } = useScroll({ enabled: !media.sm })
-  const { defaultChainId } = useEnabledChains()
+  const media = useMedia();
+  const { height: scrollPosition } = useScroll({ enabled: !media.sm });
+  const { defaultChainId } = useEnabledChains();
   const initialInputCurrency = useCurrency({
-    address: 'ETH',
+    address: "ETH",
     chainId: defaultChainId,
-  })
-  const navigate = useNavigate()
-  const { t } = useTranslation()
+  });
+  const navigate = useNavigate();
+  const { t } = useTranslation();
   const { translateY, opacityY } = useMemo(
     () => ({
       translateY: !media.sm ? -scrollPosition / 7 : 0,
       opacityY: !media.sm ? 1 - scrollPosition / 1000 : 1,
     }),
-    [media.sm, scrollPosition],
-  )
+    [media.sm, scrollPosition]
+  );
 
   const swapRedirectCallback = useCallback(
-    ({ inputCurrency, outputCurrency, typedValue, independentField, chainId }: Parameters<SwapRedirectFn>[0]) => {
+    ({
+      inputCurrency,
+      outputCurrency,
+      typedValue,
+      independentField,
+      chainId,
+    }: Parameters<SwapRedirectFn>[0]) => {
       navigate(
         `/swap${serializeSwapStateToURLParameters({
           inputCurrency,
@@ -46,28 +52,28 @@ export function Hero({ scrollToRef, transition }: HeroProps) {
           typedValue,
           independentField,
           chainId,
-        })}`,
-      )
+        })}`
+      );
     },
-    [navigate],
-  )
+    [navigate]
+  );
 
   const renderRiseInText = useMemo(() => {
-    return t('hero.swap.title')
+    return t("hero.swap.title")
       .split(/(<br\/>)|\s+/)
       .filter(Boolean) // splits the string by spaces but also captures "<br/>" as a separate element in the array
       .map((word, index) => {
-        if (word === '<br/>') {
-          return <br key={`${index}-${word}-br`} />
+        if (word === "<br/>") {
+          return <br key={`${index}-${word}-br`} />;
         } else {
           return (
             <Fragment key={`${index}-${word}`}>
-              <RiseInText delay={index * 0.1}>{word}</RiseInText>{' '}
+              <RiseInText delay={index * 0.1}>{word}</RiseInText>{" "}
             </Fragment>
-          )
+          );
         }
-      })
-  }, [t])
+      });
+  }, [t]);
 
   return (
     <Flex
@@ -81,7 +87,7 @@ export function Hero({ scrollToRef, transition }: HeroProps) {
       pt={INTERFACE_NAV_HEIGHT}
       pointerEvents="none"
     >
-      {!media.sm && <TokenCloud />}
+      {/* {!media.sm && <TokenCloud />} */}
 
       <Flex
         alignSelf="center"
@@ -94,7 +100,9 @@ export function Hero({ scrollToRef, transition }: HeroProps) {
         $lg={{ pt: 24 }}
         $sm={{ pt: 8 }}
         $platform-web={{
-          transition: transition ? 'shrinkAndFade 1s ease-in-out forwards' : undefined,
+          transition: transition
+            ? "shrinkAndFade 1s ease-in-out forwards"
+            : undefined,
         }}
       >
         <Flex maxWidth={920} alignItems="center" pointerEvents="none">
@@ -105,39 +113,38 @@ export function Hero({ scrollToRef, transition }: HeroProps) {
             textAlign="center"
             fontWeight="$book"
             $md={{ fontSize: 52 }}
-            $sm={{ variant: 'heading2', fontSize: 36 }}
-            $short={{ variant: 'heading2', fontSize: 36 }}
+            $sm={{ variant: "heading2", fontSize: 36 }}
+            $short={{ variant: "heading2", fontSize: 36 }}
           >
             {renderRiseInText}
           </Text>
         </Flex>
+        <RiseIn delay={0.3}>
+          <Text
+            variant="body1"
+            textAlign="center"
+            maxWidth={620}
+            color="$neutral2"
+            $short={{ variant: "body2" }}
+          >
+            <Trans i18nKey="hero.subtitle" />
+          </Text>
+        </RiseIn>
 
         <RiseIn delay={0.4}>
           <Flex
             pointerEvents="auto"
-            width={480}
             p="$padding8"
             borderRadius="$rounded24"
             backgroundColor="$surface1"
-            maxWidth="100%"
             enterStyle={{ opacity: 0 }}
           >
-            <Swap
-              hideHeader
-              hideFooter
-              syncTabToUrl={false}
-              chainId={defaultChainId}
-              initialInputCurrency={initialInputCurrency}
-              swapRedirectCallback={swapRedirectCallback}
-              usePersistedFilteredChainIds
-            />
+            <Link to="/swap">
+              <Button size="medium" emphasis="secondary" variant="default">
+                Launch Dex
+              </Button>
+            </Link>
           </Flex>
-        </RiseIn>
-
-        <RiseIn delay={0.3}>
-          <Text variant="body1" textAlign="center" maxWidth={430} color="$neutral2" $short={{ variant: 'body2' }}>
-            <Trans i18nKey="hero.subtitle" />
-          </Text>
         </RiseIn>
       </Flex>
 
@@ -149,8 +156,11 @@ export function Hero({ scrollToRef, transition }: HeroProps) {
         centered
         pointerEvents="none"
         bottom={48}
-        style={{ transform: `translate(0px, ${translateY}px)`, opacity: opacityY }}
-        $lgHeight={{ display: 'none' }}
+        style={{
+          transform: `translate(0px, ${translateY}px)`,
+          opacity: opacityY,
+        }}
+        $lgHeight={{ display: "none" }}
       >
         <RiseIn delay={0.3}>
           <Flex
@@ -172,5 +182,5 @@ export function Hero({ scrollToRef, transition }: HeroProps) {
         </RiseIn>
       </Flex>
     </Flex>
-  )
+  );
 }

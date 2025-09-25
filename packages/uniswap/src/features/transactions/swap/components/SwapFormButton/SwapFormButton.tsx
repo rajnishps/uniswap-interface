@@ -1,48 +1,57 @@
-import { Button, Flex, useIsShortMobileDevice } from 'ui/src'
-import { useCexTransferProviders } from 'uniswap/src/features/fiatOnRamp/useCexTransferProviders'
+import { Button, Flex, useIsShortMobileDevice } from "ui/src";
+import { useCexTransferProviders } from "uniswap/src/features/fiatOnRamp/useCexTransferProviders";
 import {
   useIsShowingWebFORNudge,
   useIsWebFORNudgeEnabled,
   useSetIsShowingWebFORNudge,
-} from 'uniswap/src/features/providers/webForNudgeProvider'
-import { useTransactionModalContext } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
-import { useIsSwapButtonDisabled } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useIsSwapButtonDisabled'
-import { useIsTradeIndicative } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useIsTradeIndicative'
-import { useOnReviewPress } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useOnReviewPress'
-import { useSwapFormButtonColors } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useSwapFormButtonColors'
-import { useSwapFormButtonText } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useSwapFormButtonText'
-import { SwapFormButtonTrace } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/SwapFormButtonTrace'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { useEvent } from 'utilities/src/react/hooks'
+} from "uniswap/src/features/providers/webForNudgeProvider";
+import { useTransactionModalContext } from "uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext";
+import { useIsSwapButtonDisabled } from "uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useIsSwapButtonDisabled";
+import { useIsTradeIndicative } from "uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useIsTradeIndicative";
+import { useOnReviewPress } from "uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useOnReviewPress";
+import { useSwapFormButtonColors } from "uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useSwapFormButtonColors";
+import { useSwapFormButtonText } from "uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useSwapFormButtonText";
+import { SwapFormButtonTrace } from "uniswap/src/features/transactions/swap/components/SwapFormButton/SwapFormButtonTrace";
+import { TestID } from "uniswap/src/test/fixtures/testIDs";
+import { useEvent } from "utilities/src/react/hooks";
 
-export const SWAP_BUTTON_TEXT_VARIANT = 'buttonLabel1'
+export const SWAP_BUTTON_TEXT_VARIANT = "buttonLabel1";
 
-export function SwapFormButton({ tokenColor }: { tokenColor?: string }): JSX.Element {
-  const isShortMobileDevice = useIsShortMobileDevice()
-  const indicative = useIsTradeIndicative()
-  const { handleOnReviewPress } = useOnReviewPress()
-  const disabled = useIsSwapButtonDisabled()
-  const buttonText = useSwapFormButtonText()
-  const { swapRedirectCallback } = useTransactionModalContext()
+export function SwapFormButton({
+  tokenColor,
+}: {
+  tokenColor?: string;
+}): JSX.Element {
+  const isShortMobileDevice = useIsShortMobileDevice();
+  const indicative = useIsTradeIndicative();
+  const { handleOnReviewPress } = useOnReviewPress();
+  const disabled = useIsSwapButtonDisabled();
+  const buttonText = useSwapFormButtonText();
+  const { swapRedirectCallback } = useTransactionModalContext();
   const {
     backgroundColor: buttonBackgroundColor,
     variant: buttonVariant,
     emphasis: buttonEmphasis,
-    buttonTextColor,
-  } = useSwapFormButtonColors(tokenColor)
-  const isShowingWebFORNudge = useIsShowingWebFORNudge()
-  const setIsShowingWebFORNudge = useSetIsShowingWebFORNudge()
-  const promptWebFORNudge = useIsWebFORNudgeEnabled() && !swapRedirectCallback && !isShowingWebFORNudge
+    // buttonTextColor,
+  } = useSwapFormButtonColors(tokenColor);
+  const buttonTextColor = "white";
+  const isShowingWebFORNudge = useIsShowingWebFORNudge();
+  const setIsShowingWebFORNudge = useSetIsShowingWebFORNudge();
+  const promptWebFORNudge =
+    useIsWebFORNudgeEnabled() && !swapRedirectCallback && !isShowingWebFORNudge;
 
   // preload cex transfer providers to avoid flickering when showing web for nudge
-  useCexTransferProviders({ isDisabled: !promptWebFORNudge })
+  useCexTransferProviders({ isDisabled: !promptWebFORNudge });
 
   const setIsShowingWebFORNudgeHandler: () => void = useEvent(() => {
-    setIsShowingWebFORNudge(true)
-  })
+    setIsShowingWebFORNudge(true);
+  });
 
   return (
-    <Flex alignItems="center" gap={isShortMobileDevice ? '$spacing8' : '$spacing16'}>
+    <Flex
+      alignItems="center"
+      gap={isShortMobileDevice ? "$spacing8" : "$spacing16"}
+    >
       <SwapFormButtonTrace>
         <Flex row alignSelf="stretch">
           <Button
@@ -52,15 +61,23 @@ export function SwapFormButton({ tokenColor }: { tokenColor?: string }): JSX.Ele
             loading={!!indicative}
             isDisabled={disabled}
             backgroundColor={buttonBackgroundColor}
-            size={isShortMobileDevice ? 'small' : 'large'}
+            size={isShortMobileDevice ? "small" : "large"}
             testID={TestID.ReviewSwap}
             animation="simple"
-            onPress={promptWebFORNudge ? setIsShowingWebFORNudgeHandler : handleOnReviewPress}
+            onPress={
+              promptWebFORNudge
+                ? setIsShowingWebFORNudgeHandler
+                : handleOnReviewPress
+            }
           >
-            {buttonTextColor ? <Button.Text color={buttonTextColor}>{buttonText}</Button.Text> : buttonText}
+            {buttonTextColor ? (
+              <Button.Text color={buttonTextColor}>{buttonText}</Button.Text>
+            ) : (
+              buttonText
+            )}
           </Button>
         </Flex>
       </SwapFormButtonTrace>
     </Flex>
-  )
+  );
 }

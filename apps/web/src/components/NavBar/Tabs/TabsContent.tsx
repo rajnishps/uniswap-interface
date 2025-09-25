@@ -91,13 +91,13 @@ export const useTabsContent = (): TabsSection[] => {
     {
       title: t("common.airdrop"),
       href: "/explore/airdrop",
-      isActive: pathname.startsWith("/explore") || pathname.startsWith("/nfts"),
+      isActive: pathname.startsWith("/airdrop"),
       icon: <Compass color="$accent1" size="$icon.20" />,
     },
     {
       title: t("common.launchpad"),
       href: "/explore/launchpad",
-      isActive: pathname.startsWith("/explore") || pathname.startsWith("/nfts"),
+      isActive: pathname.startsWith("/launchpad"),
       icon: <Compass color="$accent1" size="$icon.20" />,
     },
     // {

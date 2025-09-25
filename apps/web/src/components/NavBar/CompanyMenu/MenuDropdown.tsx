@@ -1,52 +1,57 @@
-import { MenuItem, MenuSection, MenuSectionTitle, useMenuContent } from 'components/NavBar/CompanyMenu/Content'
-import { LegalAndPrivacyMenu } from 'components/NavBar/LegalAndPrivacyMenu'
-import { NavDropdown } from 'components/NavBar/NavDropdown'
-import { useTabsVisible } from 'components/NavBar/ScreenSizes'
-import { useTabsContent } from 'components/NavBar/Tabs/TabsContent'
-import { Socials } from 'pages/Landing/sections/Footer'
-import { useMemo } from 'react'
-import { useTranslation } from 'react-i18next'
-import { Link } from 'react-router'
-import { ExternalLink } from 'theme/components/Links'
-import { ClickableTamaguiStyle } from 'theme/components/styles'
-import { Anchor, Flex, Separator, styled, Text } from 'ui/src'
-import { TextVariantTokens } from 'ui/src/theme'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import {
+  MenuItem,
+  MenuSection,
+  MenuSectionTitle,
+  useMenuContent,
+} from "components/NavBar/CompanyMenu/Content";
+import { LegalAndPrivacyMenu } from "components/NavBar/LegalAndPrivacyMenu";
+import { NavDropdown } from "components/NavBar/NavDropdown";
+import { useTabsVisible } from "components/NavBar/ScreenSizes";
+import { useTabsContent } from "components/NavBar/Tabs/TabsContent";
+import { Socials } from "pages/Landing/sections/Footer";
+import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
+import { Link } from "react-router";
+import { ExternalLink } from "theme/components/Links";
+import { ClickableTamaguiStyle } from "theme/components/styles";
+import { Anchor, Flex, Separator, styled, Text } from "ui/src";
+import { TextVariantTokens } from "ui/src/theme";
+import { FeatureFlags } from "uniswap/src/features/gating/flags";
+import { useFeatureFlag } from "uniswap/src/features/gating/hooks";
+import { TestID } from "uniswap/src/test/fixtures/testIDs";
 
 const Container = styled(Flex, {
-  width: '400px',
-  p: '$gap16',
-  userSelect: 'none',
-  height: 'unset',
-  borderRadius: '$rounded12',
-  backgroundColor: '$surface2',
-  borderColor: '$surface3',
+  width: "400px",
+  p: "$gap16",
+  userSelect: "none",
+  height: "unset",
+  borderRadius: "$rounded12",
+  backgroundColor: "$surface2",
+  borderColor: "$surface3",
   borderWidth: 1,
-  borderStyle: 'solid',
-  boxShadow: '$shadow.1',
-})
+  borderStyle: "solid",
+  boxShadow: "$shadow.1",
+});
 
 const LinkStyle = {
-  textDecoration: 'none',
-  height: 'unset',
+  textDecoration: "none",
+  height: "unset",
   padding: 0,
-}
+};
 
 const LinkTextStyle = {
-  color: '$neutral1',
+  color: "$neutral1",
   hoverStyle: {
     opacity: 0.6,
   },
-}
+};
 
 export function MenuLink({
   label,
   href,
   internal,
   closeMenu,
-  textVariant = 'body3',
+  textVariant = "body3",
   icon,
 }: MenuItem & { textVariant?: TextVariantTokens }) {
   return internal ? (
@@ -59,7 +64,11 @@ export function MenuLink({
       </Flex>
     </Link>
   ) : (
-    <ExternalLink href={href} onClick={closeMenu} style={{ ...LinkStyle, stroke: 'unset' }}>
+    <ExternalLink
+      href={href}
+      onClick={closeMenu}
+      style={{ ...LinkStyle, stroke: "unset" }}
+    >
       <Flex row gap="$gap8">
         {icon}
         <Text variant={textVariant} {...LinkTextStyle}>
@@ -67,7 +76,7 @@ export function MenuLink({
         </Text>
       </Flex>
     </ExternalLink>
-  )
+  );
 }
 function Section({ title, items, closeMenu }: MenuSection) {
   return (
@@ -86,15 +95,15 @@ function Section({ title, items, closeMenu }: MenuSection) {
         />
       ))}
     </Flex>
-  )
+  );
 }
 
 function ProductSection({ items }: { items: MenuItem[] }) {
-  const { t } = useTranslation()
+  const { t } = useTranslation();
   return (
-    <Flex gap="$gap12" data-testid={`menu-section-${t('common.products')}`}>
+    <Flex gap="$gap12" data-testid={`menu-section-${t("common.products")}`}>
       <Text variant="body4" color="$neutral2">
-        {t('common.products')}
+        {t("common.products")}
       </Text>
       <Flex row gap="$gap16" flexWrap="wrap">
         {items.map((item, index) => (
@@ -107,7 +116,11 @@ function ProductSection({ items }: { items: MenuItem[] }) {
             aria-label={item.label}
           >
             <Flex row gap="$gap8" minWidth={168}>
-              <Flex p="$padding6" borderRadius="$rounded8" backgroundColor="$accent2">
+              <Flex
+                p="$padding6"
+                borderRadius="$rounded8"
+                backgroundColor="$accent2"
+              >
                 {item.icon}
               </Flex>
               <Flex>
@@ -121,20 +134,22 @@ function ProductSection({ items }: { items: MenuItem[] }) {
         ))}
       </Flex>
     </Flex>
-  )
+  );
 }
 
 export function MenuDropdown({ close }: { close?: () => void }) {
-  const { t } = useTranslation()
-  const isConversionTrackingEnabled = useFeatureFlag(FeatureFlags.ConversionTracking)
+  const { t } = useTranslation();
+  const isConversionTrackingEnabled = useFeatureFlag(
+    FeatureFlags.ConversionTracking
+  );
   const menuContent = useMenuContent({
     keys: [MenuSectionTitle.Protocol, MenuSectionTitle.Company],
-  })
+  });
   const productSection = useMenuContent({
     keys: [MenuSectionTitle.Products],
-  })
-  const areTabsVisible = useTabsVisible()
-  const tabs = useTabsContent()
+  });
+  const areTabsVisible = useTabsVisible();
+  const tabs = useTabsContent();
   const tabsMenuItems = useMemo(() => {
     return tabs.map((tab) => {
       return {
@@ -142,18 +157,26 @@ export function MenuDropdown({ close }: { close?: () => void }) {
         href: tab.href,
         internal: true,
         overflow: false,
-      }
-    })
-  }, [tabs])
+      };
+    });
+  }, [tabs]);
 
   return (
     <NavDropdown isOpen={false} dataTestId={TestID.NavCompanyDropdown}>
       <Container>
         <Flex gap="$spacing16">
           {productSection[MenuSectionTitle.Products] && (
-            <ProductSection items={productSection[MenuSectionTitle.Products].items} />
+            <ProductSection
+              items={productSection[MenuSectionTitle.Products].items}
+            />
           )}
-          {!areTabsVisible && <Section title={t('common.app')} items={tabsMenuItems} closeMenu={close} />}
+          {!areTabsVisible && (
+            <Section
+              title={t("common.app")}
+              items={tabsMenuItems}
+              closeMenu={close}
+            />
+          )}
           <Separator />
           <Flex row>
             {Object.values(menuContent).map((sectionContent, index) => (
@@ -166,9 +189,11 @@ export function MenuDropdown({ close }: { close?: () => void }) {
             ))}
           </Flex>
           <Socials iconSize="25px" />
-          {isConversionTrackingEnabled && <LegalAndPrivacyMenu closeMenu={close} />}
+          {isConversionTrackingEnabled && (
+            <LegalAndPrivacyMenu closeMenu={close} />
+          )}
         </Flex>
       </Container>
     </NavDropdown>
-  )
+  );
 }

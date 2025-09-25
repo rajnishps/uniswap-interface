@@ -46,54 +46,85 @@ export function CompanyMenu() {
   const isTouchDevice = useIsTouchDevice();
 
   return (
-    <Popover
-      ref={popoverRef}
-      placement="bottom"
-      hoverable
-      stayInFrame
-      allowFlip
-      onOpenChange={setIsOpen}
-    >
-      {/* <Popover.Trigger data-testid={TestID.NavCompanyMenu}> */}
-      <Flex
-        row
-        alignItems="center"
-        gap="$gap4"
-        p="$spacing8"
-        cursor="pointer"
-        group
-        $platform-web={{ containerType: "normal" }}
-      >
-        <Link to="/?intro=true" style={{ textDecoration: "none" }}>
-          <Flex
-            row
-            alignItems="center"
-            gap="$gap4"
-            data-testid={TestID.NavUniswapLogo}
-          >
-            <NavIcon />
-            {isLargeScreen && (
-              <Text variant="subheading1" color="$accent1" userSelect="none">
-                Hyper Orbit
-              </Text>
-            )}
-          </Flex>
-        </Link>
-        {(media.md || isTouchDevice) && (
-          <Hamburger size={22} color="$neutral2" cursor="pointer" ml="16px" />
-        )}
-        {/* {!media.md && !isTouchDevice && (
-          <ArrowDownWrapper open={isOpen}>
-            <ArrowChangeDown width="12px" height="12px" />
-          </ArrowDownWrapper>
-        )} */}
-      </Flex>
-      {/* </Popover.Trigger> */}
+    <>
       {isMobileDrawer ? (
-        <MobileMenuDrawer isOpen={isOpen} closeMenu={closeMenu} />
+        <Popover
+          ref={popoverRef}
+          placement="bottom"
+          stayInFrame
+          allowFlip
+          onOpenChange={setIsOpen}
+        >
+          <Popover.Trigger data-testid={TestID.NavCompanyMenu}>
+            <Flex
+              row
+              alignItems="center"
+              gap="$gap4"
+              p="$spacing8"
+              cursor="pointer"
+              group
+              $platform-web={{ containerType: "normal" }}
+            >
+              <Link to="/?intro=true" style={{ textDecoration: "none" }}>
+                <Flex
+                  row
+                  alignItems="center"
+                  gap="$gap4"
+                  data-testid={TestID.NavUniswapLogo}
+                >
+                  {/* <NavIcon /> */}
+                  {isLargeScreen && (
+                    <Text variant="heading3" color="$white" userSelect="none">
+                      Hyper Orbit
+                    </Text>
+                  )}
+                </Flex>
+              </Link>
+              {(media.md || isTouchDevice) && (
+                <Hamburger
+                  size={22}
+                  color="$neutral2"
+                  cursor="pointer"
+                  ml="16px"
+                />
+              )}
+              {/* {!media.md && !isTouchDevice && (
+          <ArrowDownWrapper open={isOpen}>
+          <ArrowChangeDown width="12px" height="12px" />
+          </ArrowDownWrapper>
+          )} */}
+            </Flex>
+          </Popover.Trigger>
+          <MobileMenuDrawer isOpen={isOpen} closeMenu={closeMenu} />
+        </Popover>
       ) : (
-        <MenuDropdown close={closeMenu} />
+        <Flex
+          row
+          alignItems="center"
+          gap="$gap4"
+          p="$spacing8"
+          cursor="pointer"
+          group
+          $platform-web={{ containerType: "normal" }}
+        >
+          <Link to="/?intro=true" style={{ textDecoration: "none" }}>
+            <Flex
+              row
+              alignItems="center"
+              gap="$gap4"
+              data-testid={TestID.NavUniswapLogo}
+            >
+              {/* <NavIcon /> */}
+              {isLargeScreen && (
+                <Text variant="heading3" color="$white" userSelect="none">
+                  Hyper Orbit
+                </Text>
+              )}
+            </Flex>
+          </Link>
+          <MenuDropdown close={closeMenu} />
+        </Flex>
       )}
-    </Popover>
+    </>
   );
 }

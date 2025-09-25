@@ -90,7 +90,7 @@ const ExistingUserCTAButton = forwardRef<
   return (
     <Button
       fill={false}
-      size="small"
+      size="medium"
       variant="branded"
       emphasis="primary"
       tabIndex={0}
