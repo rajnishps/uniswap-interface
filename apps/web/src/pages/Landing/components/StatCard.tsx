@@ -1,9 +1,9 @@
-import { motion } from 'framer-motion'
-import styled, { keyframes, useTheme } from 'lib/styled-components'
-import { parseToRgb } from 'polished'
-import { Flex, Text } from 'ui/src'
-import { opacify } from 'ui/src/theme'
-import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
+import { motion } from "framer-motion";
+import styled, { keyframes, useTheme } from "lib/styled-components";
+import { parseToRgb } from "polished";
+import { Flex, Text } from "ui/src";
+import { opacify } from "ui/src/theme";
+import { useCurrentLocale } from "uniswap/src/features/language/hooks";
 
 const Mask = motion(styled.div`
   position: relative;
@@ -18,7 +18,7 @@ const Mask = motion(styled.div`
   @media (max-width: 768px) {
     min-height: 32px;
   }
-`)
+`);
 
 const Char = motion(styled.div<{ color: string }>`
   font-variant-numeric: lining-nums tabular-nums;
@@ -44,12 +44,14 @@ const Char = motion(styled.div<{ color: string }>`
     font-size: 22px;
     line-height: 22px;
   }
-`)
+`);
 const Container = styled.div<{ live?: boolean }>`
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  justify-content: space-between;
+
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
   border-radius: 20px;
 
   width: 100%;
@@ -58,7 +60,9 @@ const Container = styled.div<{ live?: boolean }>`
 
   padding: 32px;
 
-  background-color: ${({ theme, live }) => (live ? '#2FBA610A' : theme.surface2)};
+  background: linear-gradient(180deg, #00c3a020 0%, #006e6a20 100%);
+  border-radius: 20px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
   overflow: hidden;
 
   @media (max-width: 1024px) {
@@ -66,19 +70,13 @@ const Container = styled.div<{ live?: boolean }>`
   }
   @media (max-width: 768px) {
   }
-  background-image: radial-gradient(rgba(${({ theme }) => {
-    const { red, green, blue } = parseToRgb(theme.neutral2)
-    return `${red}, ${green}, ${blue}`
-  }}, 0.25) 0.5px, transparent 0)};
-  background-size: 12px 12px;
-  background-position: -8.5px -8.5px;
-`
+`;
 const SpriteContainer = motion(styled.div`
   pointer-events: none;
   diplay: flex;
   flex-direction: column;
   color: ${({ theme }) => theme.neutral2};
-`)
+`);
 
 const pulsate = (color: string) => keyframes`
   0% {
@@ -87,7 +85,7 @@ const pulsate = (color: string) => keyframes`
   100% {
     box-shadow: 0 0 0 4px ${opacify(24, color)};
   }
-`
+`;
 export const LiveIcon = styled.div<{ display: string }>`
   display: ${({ display }) => display};
   width: 6px;
@@ -100,12 +98,11 @@ export const LiveIcon = styled.div<{ display: string }>`
   animation-duration: 1000ms;
   animation-iteration-count: infinite;
   animation-timing-function: ease-in-out;
-`
+`;
 
 const Title = styled.h3<{ color: string }>`
   padding: 0;
   margin: 0;
-  font-family: Basel;
   font-size: 24px;
   font-style: normal;
   font-weight: 535;
@@ -119,65 +116,79 @@ const Title = styled.h3<{ color: string }>`
     font-size: 18px;
     line-height: 20px;
   }
-`
+`;
 type StatCardProps = {
-  title: string
-  value: string
-  live?: boolean
-  prefix?: string
-  suffix?: string
-  delay?: number
-  inView?: boolean
-}
+  title: string;
+  value: string;
+  icon?: string;
+  live?: boolean;
+  prefix?: string;
+  suffix?: string;
+  delay?: number;
+  inView?: boolean;
+  style?: React.CSSProperties;
+};
 
 function rotateArray<T>(arr: T[], n: number) {
-  return arr.slice(n, arr.length).concat(arr.slice(0, n))
+  return arr.slice(n, arr.length).concat(arr.slice(0, n));
 }
 
-const numeric = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
-const currency = ['¥', '£', '€', '$']
-const suffixes = [' ', 'K', 'M', 'B', 'T']
-const delineators = [',', '.']
+const numeric = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+const currency = ["¥", "£", "€", "$"];
+const suffixes = [" ", "K", "M", "B", "T"];
+const delineators = [",", "."];
 
 export function StatCard(props: StatCardProps) {
-  const theme = useTheme()
+  const theme = useTheme();
 
   return (
-    <Container live={props.live}>
+    <Container style={props.style}>
+      {props.icon && (
+        <img src={props.icon} alt={props.title} width={100} height={100} />
+      )}
       <Flex row alignItems="center" gap="$gap4">
-        <Title color={props.live ? theme.success : theme.neutral2}>{props.title}</Title>
+        <Title color={theme.neutral1}>{props.title}</Title>
       </Flex>
-      <StringInterpolationWithMotion
-        prefix={props.prefix}
-        suffix={props.suffix}
-        value={props.value}
-        live={props.live}
-        delay={props.delay}
-        inView={props.inView}
-      />
+      <Text
+        fontSize={16}
+        fontWeight={500}
+        color={theme.neutral2}
+        allowFontScaling={false}
+      >
+        {props.value}
+      </Text>
     </Container>
-  )
+  );
 }
 
-function StringInterpolationWithMotion({ value, delay, inView, live }: Omit<StatCardProps, 'title'>) {
-  const chars = value.split('')
-  const theme = useTheme()
-  const locale = useCurrentLocale()
+function StringInterpolationWithMotion({
+  value,
+  delay,
+  inView,
+  live,
+}: Omit<StatCardProps, "title">) {
+  const chars = value.split("");
+  const theme = useTheme();
+  const locale = useCurrentLocale();
 
   // For Arabic locales, use simple Text component instead of animated sprites
-  const isArabic = locale.startsWith('ar')
+  const isArabic = locale.startsWith("ar");
   if (isArabic) {
     return (
-      <Text variant="heading2" color={live ? theme.success : theme.neutral1} allowFontScaling={false}>
+      <Text
+        variant="heading2"
+        color={live ? theme.success : theme.neutral1}
+        allowFontScaling={false}
+      >
         {value}
       </Text>
-    )
+    );
   }
 
   return (
     <Mask
       initial="initial"
-      animate={inView ? 'animate' : 'initial'}
+      animate={inView ? "animate" : "initial"}
       transition={{ staggerChildren: 0.025, delayChildren: delay }}
     >
       {chars.map((char: string, index: number) => {
@@ -185,24 +196,39 @@ function StringInterpolationWithMotion({ value, delay, inView, live }: Omit<Stat
         const charset = numeric.includes(char)
           ? numeric
           : delineators.includes(char)
-            ? delineators
-            : currency.includes(char)
-              ? currency
-              : suffixes
+          ? delineators
+          : currency.includes(char)
+          ? currency
+          : suffixes;
 
-        return <NumberSprite char={char} key={index} charset={charset} color={live ? theme.success : theme.neutral1} />
+        return (
+          <NumberSprite
+            char={char}
+            key={index}
+            charset={charset}
+            color={live ? theme.success : theme.neutral1}
+          />
+        );
       })}
     </Mask>
-  )
+  );
 }
 
-function NumberSprite({ char, charset, color }: { char: string; charset: string[]; color: string }) {
-  const height = 60
+function NumberSprite({
+  char,
+  charset,
+  color,
+}: {
+  char: string;
+  charset: string[];
+  color: string;
+}) {
+  const height = 60;
 
   // rotate array so that the char is at the top
-  const chars = rotateArray(charset, charset.indexOf(char))
+  const chars = rotateArray(charset, charset.indexOf(char));
 
-  const idx = chars.indexOf(char)
+  const idx = chars.indexOf(char);
 
   const variants = {
     initial: {
@@ -212,10 +238,10 @@ function NumberSprite({ char, charset, color }: { char: string; charset: string[
       y: idx * -height,
       transition: {
         duration: 1,
-        type: 'spring',
+        type: "spring",
       },
     },
-  }
+  };
 
   return (
     <SpriteContainer variants={variants}>
@@ -231,17 +257,17 @@ function NumberSprite({ char, charset, color }: { char: string; charset: string[
                 duration: 0.5,
               },
               duration: 1,
-              type: 'spring',
+              type: "spring",
             },
           },
-        }
+        };
 
         return (
           <Char variants={charVariants} key={index} color={color}>
             {char}
           </Char>
-        )
+        );
       })}
     </SpriteContainer>
-  )
+  );
 }

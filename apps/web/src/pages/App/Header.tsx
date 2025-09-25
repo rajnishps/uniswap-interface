@@ -39,10 +39,10 @@ export const Header = memo(function Header() {
           }
         `}
       </style>
-      <Flex position="relative" zIndex={zIndexes.sticky} pointerEvents="auto">
-        {extensionEligible && <MobileAppPromoBanner />}
-        {renderUkBanner && <UkBanner />}
-      </Flex>
+      {/* <Flex position="relative" zIndex={zIndexes.sticky} pointerEvents="auto">
+         {extensionEligible && <MobileAppPromoBanner />}
+        {renderUkBanner && <UkBanner />} 
+      </Flex> */}
       <Flex
         width="100%"
         backgroundColor={isHeaderTransparent ? "transparent" : "#001e18"}

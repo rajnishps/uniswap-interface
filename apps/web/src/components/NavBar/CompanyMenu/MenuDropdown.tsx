@@ -165,11 +165,11 @@ export function MenuDropdown({ close }: { close?: () => void }) {
     <NavDropdown isOpen={false} dataTestId={TestID.NavCompanyDropdown}>
       <Container>
         <Flex gap="$spacing16">
-          {productSection[MenuSectionTitle.Products] && (
+          {/* {productSection[MenuSectionTitle.Products] && (
             <ProductSection
               items={productSection[MenuSectionTitle.Products].items}
             />
-          )}
+          )} */}
           {!areTabsVisible && (
             <Section
               title={t("common.app")}
@@ -177,7 +177,7 @@ export function MenuDropdown({ close }: { close?: () => void }) {
               closeMenu={close}
             />
           )}
-          <Separator />
+          {/* <Separator />
           <Flex row>
             {Object.values(menuContent).map((sectionContent, index) => (
               <Section
@@ -187,11 +187,11 @@ export function MenuDropdown({ close }: { close?: () => void }) {
                 closeMenu={close}
               />
             ))}
-          </Flex>
+          </Flex> */}
           <Socials iconSize="25px" />
-          {isConversionTrackingEnabled && (
+          {/* {isConversionTrackingEnabled && (
             <LegalAndPrivacyMenu closeMenu={close} />
-          )}
+          )} */}
         </Flex>
       </Container>
     </NavDropdown>

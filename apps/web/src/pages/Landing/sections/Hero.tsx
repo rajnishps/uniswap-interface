@@ -87,8 +87,8 @@ export function Hero({ scrollToRef, transition }: HeroProps) {
   circle at center bottom,
   #b6fcd5 0%,    
   #015042 25%,  
-  #013e33 40%,  
-  #01241d 70%,   
+  #013e33 50%,  
+  #01241d 75%,   
   #01130f 100%   
 )"
       minWidth="100%"
@@ -148,7 +148,7 @@ export function Hero({ scrollToRef, transition }: HeroProps) {
             borderRadius="$rounded24"
             alignItems="center"
             justifyContent="center"
-            gap="$gap20"
+            gap={media.sm ? 0 : "$gap20"}
             // backgroundColor="$surface1"
             enterStyle={{ opacity: 0 }}
           >
@@ -177,7 +177,7 @@ export function Hero({ scrollToRef, transition }: HeroProps) {
 
       <Flex
         alignSelf="center"
-        flexDirection="row"
+        flexDirection={media.sm ? "column" : "row"}
         pointerEvents="none"
         pt={48}
         gap={50}

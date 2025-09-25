@@ -37,11 +37,11 @@ function LandingV2({ transition }: { transition?: boolean }) {
       data-testid="landing-page"
       background="linear-gradient(
   to right,
-  #01241d 0%,   
-  #013e33 20%, 
-  #b6fcd5 50%, 
-  #013e33 80%, 
-  #01241d 100% 
+  #033128 0%,   
+  #014b3d 25%, 
+  #014b3d 50%, 
+  #014b3d 75%, 
+#033128 100% 
 )"
     >
       <Grain />

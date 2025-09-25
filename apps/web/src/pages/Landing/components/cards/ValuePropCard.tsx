@@ -45,7 +45,7 @@ export default function ValuePropCard(props: ValuePropCardProps) {
       borderRadius={32}
       width="100%"
       overflow="hidden"
-      minHeight={240}
+      height={150}
       maxWidth="calc(50% - 8px)"
       containerType="normal"
       group="card"
@@ -88,26 +88,14 @@ export default function ValuePropCard(props: ValuePropCardProps) {
           p: 20,
         }}
       >
-        {title}
         {subtitle && (
           <Text
-            mt="$spacing16"
             variant="heading3"
-            fontWeight="$true"
-            color={color}
+            // fontWeight="$true"
+            color="#c6c6c6"
             whiteSpace="nowrap"
             overflow="visible"
-            $xl={{
-              variant: "heading3",
-            }}
-            $lg={{
-              variant: "heading2",
-              whiteSpace: "normal",
-            }}
-            $xs={{
-              variant: "heading3",
-              mt: "$spacing8",
-            }}
+            fontSize={18}
           >
             {subtitle}
           </Text>
