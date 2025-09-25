@@ -1,54 +1,67 @@
-import { forwardRef, memo, useCallback, useImperativeHandle, useRef } from 'react'
-import type { NativeSyntheticEvent, TextInput, TextInputSelectionChangeEventData } from 'react-native'
-import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
-import type { ShakeAnimation } from 'ui/src/animations/hooks/useShakeAnimation'
-import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
-import { fonts, spacing } from 'ui/src/theme'
-import { AmountInput } from 'uniswap/src/components/AmountInput/AmountInput'
-import { DefaultTokenOptions } from 'uniswap/src/components/CurrencyInputPanel/DefaultTokenOptions/DefaultTokenOptions'
+import {
+  forwardRef,
+  memo,
+  useCallback,
+  useImperativeHandle,
+  useRef,
+} from "react";
+import type {
+  NativeSyntheticEvent,
+  TextInput,
+  TextInputSelectionChangeEventData,
+} from "react-native";
+import { Flex, Text, TouchableArea, useSporeColors } from "ui/src";
+import type { ShakeAnimation } from "ui/src/animations/hooks/useShakeAnimation";
+import { AnimatedFlex } from "ui/src/components/layout/AnimatedFlex";
+import { fonts, spacing } from "ui/src/theme";
+import { AmountInput } from "uniswap/src/components/AmountInput/AmountInput";
+import { DefaultTokenOptions } from "uniswap/src/components/CurrencyInputPanel/DefaultTokenOptions/DefaultTokenOptions";
 import {
   MIN_INPUT_FONT_SIZE,
   useCurrencyInputFontSize,
-} from 'uniswap/src/components/CurrencyInputPanel/hooks/useCurrencyInputFontSize'
-import type { PanelTextDisplay } from 'uniswap/src/components/CurrencyInputPanel/hooks/useIndicativeQuoteTextDisplay'
-import { useInputFocusSync } from 'uniswap/src/components/CurrencyInputPanel/hooks/useInputFocusSync/useInputFocusSync.native'
-import { useRefetchAnimationStyle } from 'uniswap/src/components/CurrencyInputPanel/hooks/useRefetchAnimationStyle'
-import { SelectTokenButton } from 'uniswap/src/components/CurrencyInputPanel/SelectTokenButton'
-import type { CurrencyInputPanelProps, CurrencyInputPanelRef } from 'uniswap/src/components/CurrencyInputPanel/types'
-import { MAX_FIAT_INPUT_DECIMALS } from 'uniswap/src/constants/transactions'
-import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { CurrencyField } from 'uniswap/src/types/currency'
-import { isInterfaceDesktop, isWeb } from 'utilities/src/platform'
+} from "uniswap/src/components/CurrencyInputPanel/hooks/useCurrencyInputFontSize";
+import type { PanelTextDisplay } from "uniswap/src/components/CurrencyInputPanel/hooks/useIndicativeQuoteTextDisplay";
+import { useInputFocusSync } from "uniswap/src/components/CurrencyInputPanel/hooks/useInputFocusSync/useInputFocusSync.native";
+import { useRefetchAnimationStyle } from "uniswap/src/components/CurrencyInputPanel/hooks/useRefetchAnimationStyle";
+import { SelectTokenButton } from "uniswap/src/components/CurrencyInputPanel/SelectTokenButton";
+import type {
+  CurrencyInputPanelProps,
+  CurrencyInputPanelRef,
+} from "uniswap/src/components/CurrencyInputPanel/types";
+import { MAX_FIAT_INPUT_DECIMALS } from "uniswap/src/constants/transactions";
+import { useAppFiatCurrencyInfo } from "uniswap/src/features/fiatCurrency/hooks";
+import { TestID } from "uniswap/src/test/fixtures/testIDs";
+import { CurrencyField } from "uniswap/src/types/currency";
+import { isInterfaceDesktop, isWeb } from "utilities/src/platform";
 
 type CurrencyInputPanelInputProps = {
-  shakeAnimation: ShakeAnimation
-  showInsufficientBalanceWarning: boolean
-  showDefaultTokenOptions: boolean
-  indicativeQuoteTextDisplay: PanelTextDisplay
-  onPressDisabledWithShakeAnimation: () => void
+  shakeAnimation: ShakeAnimation;
+  showInsufficientBalanceWarning: boolean;
+  showDefaultTokenOptions: boolean;
+  indicativeQuoteTextDisplay: PanelTextDisplay;
+  onPressDisabledWithShakeAnimation: () => void;
 } & Pick<
   CurrencyInputPanelProps,
-  | 'autoFocus'
-  | 'currencyAmount'
-  | 'currencyBalance'
-  | 'currencyField'
-  | 'currencyInfo'
-  | 'focus'
-  | 'isLoading'
-  | 'isIndicativeLoading'
-  | 'valueIsIndicative'
-  | 'isFiatMode'
-  | 'onPressIn'
-  | 'onSelectionChange'
-  | 'onSetExactAmount'
-  | 'onShowTokenSelector'
-  | 'showSoftInputOnFocus'
-  | 'resetSelection'
-  | 'disabled'
-  | 'onPressDisabled'
-  | 'tokenColor'
->
+  | "autoFocus"
+  | "currencyAmount"
+  | "currencyBalance"
+  | "currencyField"
+  | "currencyInfo"
+  | "focus"
+  | "isLoading"
+  | "isIndicativeLoading"
+  | "valueIsIndicative"
+  | "isFiatMode"
+  | "onPressIn"
+  | "onSelectionChange"
+  | "onSetExactAmount"
+  | "onShowTokenSelector"
+  | "showSoftInputOnFocus"
+  | "resetSelection"
+  | "disabled"
+  | "onPressDisabled"
+  | "tokenColor"
+>;
 
 export const CurrencyInputPanelInput = memo(
   forwardRef<CurrencyInputPanelRef, CurrencyInputPanelInputProps>(
@@ -72,23 +85,23 @@ export const CurrencyInputPanelInput = memo(
         showInsufficientBalanceWarning,
         showDefaultTokenOptions,
         indicativeQuoteTextDisplay,
-      } = props
+      } = props;
 
-      const colors = useSporeColors()
-      const { symbol: fiatCurrencySymbol } = useAppFiatCurrencyInfo()
+      const colors = useSporeColors();
+      const { symbol: fiatCurrencySymbol } = useAppFiatCurrencyInfo();
 
-      const { value, color } = indicativeQuoteTextDisplay
+      const { value, color } = indicativeQuoteTextDisplay;
 
-      const inputRef = useRef<TextInput>(null)
+      const inputRef = useRef<TextInput>(null);
 
-      const { shakeStyle, triggerShakeAnimation } = shakeAnimation
+      const { shakeStyle, triggerShakeAnimation } = shakeAnimation;
 
       useImperativeHandle(forwardedRef, () => ({
         textInputRef: inputRef,
         triggerShakeAnimation,
-      }))
+      }));
 
-      const isOutput = currencyField === CurrencyField.OUTPUT
+      const isOutput = currencyField === CurrencyField.OUTPUT;
 
       useInputFocusSync({
         inputRef,
@@ -96,26 +109,27 @@ export const CurrencyInputPanelInput = memo(
         value,
         currencyField,
         resetSelection,
-      })
+      });
 
-      const inputFontSize = useCurrencyInputFontSize({ value, focus })
+      const inputFontSize = useCurrencyInputFontSize({ value, focus });
 
       const onSelectionChange = useCallback(
         ({
           nativeEvent: {
             selection: { start, end },
           },
-        }: NativeSyntheticEvent<TextInputSelectionChangeEventData>) => selectionChange?.(start, end),
-        [selectionChange],
-      )
+        }: NativeSyntheticEvent<TextInputSelectionChangeEventData>) =>
+          selectionChange?.(start, end),
+        [selectionChange]
+      );
 
-      const refetchAnimationStyle = useRefetchAnimationStyle(props)
+      const refetchAnimationStyle = useRefetchAnimationStyle(props);
 
       return (
         <AnimatedFlex
           row
           alignItems="center"
-          justifyContent={!currencyInfo ? 'flex-end' : 'space-between'}
+          justifyContent={!currencyInfo ? "flex-end" : "space-between"}
           py="$spacing8"
           minHeight={MIN_INPUT_FONT_SIZE * 1.2 + 2 * spacing.spacing8}
           style={shakeStyle}
@@ -123,14 +137,26 @@ export const CurrencyInputPanelInput = memo(
           {isFiatMode && (
             <Text
               allowFontScaling
-              color={showInsufficientBalanceWarning ? '$statusCritical' : color}
+              color={showInsufficientBalanceWarning ? "$statusCritical" : color}
               fontSize={inputFontSize.fontSize}
               lineHeight={inputFontSize.lineHeight}
-              mr={isWeb ? '$spacing2' : undefined}
+              mr={isWeb ? "$spacing2" : undefined}
             >
               {fiatCurrencySymbol}
             </Text>
           )}
+          <Flex row alignItems="center" mr="$spacing8">
+            <SelectTokenButton
+              selectedCurrencyInfo={currencyInfo}
+              testID={
+                currencyField === CurrencyField.INPUT
+                  ? TestID.ChooseInputToken
+                  : TestID.ChooseOutputToken
+              }
+              tokenColor={tokenColor}
+              onPress={onShowTokenSelector}
+            />
+          </Flex>
           <AnimatedFlex
             fill
             grow
@@ -146,7 +172,12 @@ export const CurrencyInputPanelInput = memo(
                 {disabled && (
                   // Invisible TouchableArea overlay to capture onPress events and trigger the shake animation when the input is disabled
                   <TouchableArea
-                    style={{ position: 'absolute', width: '100%', height: '100%', zIndex: 1 }}
+                    style={{
+                      position: "absolute",
+                      width: "100%",
+                      height: "100%",
+                      zIndex: 1,
+                    }}
                     onPress={onPressDisabledWithShakeAnimation}
                   />
                 )}
@@ -155,7 +186,9 @@ export const CurrencyInputPanelInput = memo(
                   autoFocus={autoFocus ?? focus}
                   backgroundColor="$transparent"
                   borderWidth="$none"
-                  color={showInsufficientBalanceWarning ? '$statusCritical' : color}
+                  color={
+                    showInsufficientBalanceWarning ? "$statusCritical" : color
+                  }
                   disabled={disabled || !currencyInfo}
                   flex={1}
                   focusable={!disabled && Boolean(currencyInfo)}
@@ -166,7 +199,11 @@ export const CurrencyInputPanelInput = memo(
                   fontSize={inputFontSize.fontSize}
                   lineHeight={inputFontSize.lineHeight}
                   fontWeight="$book"
-                  maxDecimals={isFiatMode ? MAX_FIAT_INPUT_DECIMALS : currencyInfo.currency.decimals}
+                  maxDecimals={
+                    isFiatMode
+                      ? MAX_FIAT_INPUT_DECIMALS
+                      : currencyInfo.currency.decimals
+                  }
                   maxFontSizeMultiplier={fonts.heading2.maxFontSizeMultiplier}
                   minHeight={inputFontSize.lineHeight}
                   overflow="visible"
@@ -175,9 +212,11 @@ export const CurrencyInputPanelInput = memo(
                   borderRadius={0}
                   px="$none"
                   py="$none"
-                  returnKeyType={showSoftInputOnFocus ? 'done' : undefined}
+                  returnKeyType={showSoftInputOnFocus ? "done" : undefined}
                   showSoftInputOnFocus={showSoftInputOnFocus}
-                  testID={isOutput ? TestID.AmountInputOut : TestID.AmountInputIn}
+                  testID={
+                    isOutput ? TestID.AmountInputOut : TestID.AmountInputIn
+                  }
                   value={value}
                   onChangeText={onSetExactAmount}
                   onPressIn={onPressIn}
@@ -199,16 +238,8 @@ export const CurrencyInputPanelInput = memo(
               </TouchableArea>
             )}
           </AnimatedFlex>
-          <Flex row alignItems="center">
-            <SelectTokenButton
-              selectedCurrencyInfo={currencyInfo}
-              testID={currencyField === CurrencyField.INPUT ? TestID.ChooseInputToken : TestID.ChooseOutputToken}
-              tokenColor={tokenColor}
-              onPress={onShowTokenSelector}
-            />
-          </Flex>
         </AnimatedFlex>
-      )
-    },
-  ),
-)
+      );
+    }
+  )
+);

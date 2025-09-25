@@ -1,18 +1,30 @@
 /* eslint-disable complexity */
-import { forwardRef, memo, useCallback } from 'react'
-import { Flex, TouchableArea, useIsShortMobileDevice, useShakeAnimation } from 'ui/src'
-import { AmountInputPresets } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/AmountInputPresets'
-import { PresetAmountButton } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/PresetAmountButton'
-import type { PresetPercentage } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/types'
-import { CurrencyInputPanelBalance } from 'uniswap/src/components/CurrencyInputPanel/CurrencyInputPanelBalance'
-import { CurrencyInputPanelHeader } from 'uniswap/src/components/CurrencyInputPanel/CurrencyInputPanelHeader'
-import { CurrencyInputPanelInput } from 'uniswap/src/components/CurrencyInputPanel/CurrencyInputPanelInput'
-import { CurrencyInputPanelValue } from 'uniswap/src/components/CurrencyInputPanel/CurrencyInputPanelValue'
-import { useIndicativeQuoteTextDisplay } from 'uniswap/src/components/CurrencyInputPanel/hooks/useIndicativeQuoteTextDisplay'
-import type { CurrencyInputPanelProps, CurrencyInputPanelRef } from 'uniswap/src/components/CurrencyInputPanel/types'
-import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
-import { CurrencyField } from 'uniswap/src/types/currency'
-import { isExtension, isInterfaceDesktop, isMobileWeb } from 'utilities/src/platform'
+import { forwardRef, memo, useCallback } from "react";
+import {
+  Flex,
+  TouchableArea,
+  useIsShortMobileDevice,
+  useShakeAnimation,
+} from "ui/src";
+import { AmountInputPresets } from "uniswap/src/components/CurrencyInputPanel/AmountInputPresets/AmountInputPresets";
+import { PresetAmountButton } from "uniswap/src/components/CurrencyInputPanel/AmountInputPresets/PresetAmountButton";
+import type { PresetPercentage } from "uniswap/src/components/CurrencyInputPanel/AmountInputPresets/types";
+import { CurrencyInputPanelBalance } from "uniswap/src/components/CurrencyInputPanel/CurrencyInputPanelBalance";
+import { CurrencyInputPanelHeader } from "uniswap/src/components/CurrencyInputPanel/CurrencyInputPanelHeader";
+import { CurrencyInputPanelInput } from "uniswap/src/components/CurrencyInputPanel/CurrencyInputPanelInput";
+import { CurrencyInputPanelValue } from "uniswap/src/components/CurrencyInputPanel/CurrencyInputPanelValue";
+import { useIndicativeQuoteTextDisplay } from "uniswap/src/components/CurrencyInputPanel/hooks/useIndicativeQuoteTextDisplay";
+import type {
+  CurrencyInputPanelProps,
+  CurrencyInputPanelRef,
+} from "uniswap/src/components/CurrencyInputPanel/types";
+import { useWallet } from "uniswap/src/features/wallet/hooks/useWallet";
+import { CurrencyField } from "uniswap/src/types/currency";
+import {
+  isExtension,
+  isInterfaceDesktop,
+  isMobileWeb,
+} from "utilities/src/platform";
 
 export const CurrencyInputPanel = memo(
   forwardRef<CurrencyInputPanelRef, CurrencyInputPanelProps>(
@@ -44,55 +56,67 @@ export const CurrencyInputPanel = memo(
         headerLabel,
         transactionType,
         customPanelStyle,
-      } = props
-      const account = useWallet().evmAccount
-      const isShortMobileDevice = useIsShortMobileDevice()
+      } = props;
+      const account = useWallet().evmAccount;
+      const isShortMobileDevice = useIsShortMobileDevice();
 
-      const display = useIndicativeQuoteTextDisplay(props)
-      const { value, usdValue } = display
+      const display = useIndicativeQuoteTextDisplay(props);
+      const { value, usdValue } = display;
 
-      const isOutput = currencyField === CurrencyField.OUTPUT
+      const isOutput = currencyField === CurrencyField.OUTPUT;
 
-      const showDefaultTokenOptions = isOutput && !currencyInfo
+      const showDefaultTokenOptions = isOutput && !currencyInfo;
 
       const showInsufficientBalanceWarning =
-        !isOutput && !!currencyBalance && !!currencyAmount && currencyBalance.lessThan(currencyAmount)
+        !isOutput &&
+        !!currencyBalance &&
+        !!currencyAmount &&
+        currencyBalance.lessThan(currencyAmount);
 
-      const showMaxButton = showMaxButtonOnly && !isOutput && account
-      const showPercentagePresetOptions = !showMaxButtonOnly && currencyField === CurrencyField.INPUT
+      const showMaxButton = showMaxButtonOnly && !isOutput && account;
+      const showPercentagePresetOptions =
+        !showMaxButtonOnly && currencyField === CurrencyField.INPUT;
 
-      const isDesktop = isInterfaceDesktop || isExtension
+      const isDesktop = isInterfaceDesktop || isExtension;
 
-      const showPercentagePresetsOnBottom = showPercentagePresetOptions && (isMobileWeb || (isDesktop && !headerLabel))
+      const showPercentagePresetsOnBottom =
+        showPercentagePresetOptions &&
+        (isMobileWeb || (isDesktop && !headerLabel));
 
-      const shakeAnimation = useShakeAnimation()
-      const { triggerShakeAnimation } = shakeAnimation
+      const shakeAnimation = useShakeAnimation();
+      const { triggerShakeAnimation } = shakeAnimation;
 
       const onPressDisabledWithShakeAnimation = useCallback((): void => {
-        onPressDisabled?.()
-        triggerShakeAnimation()
-      }, [onPressDisabled, triggerShakeAnimation])
+        onPressDisabled?.();
+        triggerShakeAnimation();
+      }, [onPressDisabled, triggerShakeAnimation]);
 
       const handleSetPresetValue = useCallback(
         (amount: string, percentage: PresetPercentage) => {
-          onSetPresetValue?.(amount, percentage)
+          onSetPresetValue?.(amount, percentage);
         },
-        [onSetPresetValue],
-      )
+        [onSetPresetValue]
+      );
 
       return (
         <TouchableArea
           group
           disabledStyle={{
-            cursor: 'default',
+            cursor: "default",
           }}
-          onPress={disabled ? onPressDisabledWithShakeAnimation : currencyInfo ? onPressIn : onShowTokenSelector}
+          onPress={
+            disabled
+              ? onPressDisabledWithShakeAnimation
+              : currencyInfo
+              ? onPressIn
+              : onShowTokenSelector
+          }
         >
           <Flex
             {...customPanelStyle}
             overflow="hidden"
             px="$spacing16"
-            py={isShortMobileDevice ? '$spacing8' : '$spacing16'}
+            py={isShortMobileDevice ? "$spacing8" : "$spacing16"}
           >
             <CurrencyInputPanelHeader
               headerLabel={headerLabel}
@@ -127,21 +151,25 @@ export const CurrencyInputPanel = memo(
               onSelectionChange={selectionChange}
               onSetExactAmount={onSetExactAmount}
               onShowTokenSelector={onShowTokenSelector}
-              onPressDisabledWithShakeAnimation={onPressDisabledWithShakeAnimation}
+              onPressDisabledWithShakeAnimation={
+                onPressDisabledWithShakeAnimation
+              }
             />
             <Flex
               row
               alignItems="center"
               gap="$spacing8"
-              mb={showPercentagePresetsOnBottom ? '$spacing6' : undefined}
+              mb={showPercentagePresetsOnBottom ? "$spacing6" : undefined}
               // maintain layout when balance is hidden
-              {...(!currencyInfo && { opacity: 0, pointerEvents: 'none' })}
+              {...(!currencyInfo && { opacity: 0, pointerEvents: "none" })}
             >
-              {showPercentagePresetsOnBottom && currencyBalance && !currencyAmount ? (
+              {showPercentagePresetsOnBottom &&
+              currencyBalance &&
+              !currencyAmount ? (
                 <Flex position="absolute">
                   <AmountInputPresets
                     hoverLtr
-                    buttonProps={{ py: '$spacing4' }}
+                    buttonProps={{ py: "$spacing4" }}
                     currencyAmount={currencyAmount}
                     currencyBalance={currencyBalance}
                     onSetPresetValue={handleSetPresetValue}
@@ -157,17 +185,27 @@ export const CurrencyInputPanel = memo(
                   currencyInfo={currencyInfo}
                   currencyAmount={currencyAmount}
                   currencyField={currencyField}
-                  onPressDisabledWithShakeAnimation={onPressDisabledWithShakeAnimation}
+                  onPressDisabledWithShakeAnimation={
+                    onPressDisabledWithShakeAnimation
+                  }
                   onToggleIsFiatMode={onToggleIsFiatMode}
                 />
               )}
               {currencyInfo && (
-                <Flex row centered ml="auto" gap="$spacing4" justifyContent="flex-end">
+                <Flex
+                  row
+                  centered
+                  ml="auto"
+                  gap="$spacing4"
+                  justifyContent="flex-end"
+                >
                   <CurrencyInputPanelBalance
                     currencyField={currencyField}
                     currencyBalance={currencyBalance}
                     currencyInfo={currencyInfo}
-                    showInsufficientBalanceWarning={showInsufficientBalanceWarning}
+                    showInsufficientBalanceWarning={
+                      showInsufficientBalanceWarning
+                    }
                   />
                   {/* Max button */}
                   {showMaxButton && onSetPresetValue && (
@@ -188,7 +226,7 @@ export const CurrencyInputPanel = memo(
             </Flex>
           </Flex>
         </TouchableArea>
-      )
-    },
-  ),
-)
+      );
+    }
+  )
+);

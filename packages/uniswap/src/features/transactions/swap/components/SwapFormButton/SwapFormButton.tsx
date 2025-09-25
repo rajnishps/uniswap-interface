@@ -53,7 +53,7 @@ export function SwapFormButton({
       gap={isShortMobileDevice ? "$spacing8" : "$spacing16"}
     >
       <SwapFormButtonTrace>
-        <Flex row alignSelf="stretch">
+        <Flex width="50%" mx="auto" row alignSelf="stretch">
           <Button
             variant={buttonVariant}
             emphasis={buttonEmphasis}

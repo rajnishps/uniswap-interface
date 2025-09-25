@@ -1,19 +1,19 @@
-import type { FlexProps } from 'ui/src'
+import type { FlexProps } from "ui/src";
 
 function getCurrencyInputFocusedStyle(isFocused: boolean): FlexProps {
   return {
-    borderColor: isFocused ? '$surface3' : '$transparent',
-    backgroundColor: isFocused ? '$surface1' : '$surface2',
+    borderColor: isFocused ? "#ffffff20" : "$transparent",
+    backgroundColor: isFocused ? "#ffffff20" : "#ffffff20",
     hoverStyle: {
-      borderColor: isFocused ? '$surface3Hovered' : '$transparent',
-      backgroundColor: isFocused ? '$surface1' : '$surface2Hovered',
+      borderColor: isFocused ? "#ffffff20" : "$transparent",
+      backgroundColor: isFocused ? "#ffffff20" : "#ffffff20",
     },
-  }
+  };
 }
 
-const focusedInputStyle = getCurrencyInputFocusedStyle(true)
-const unfocusedInputStyle = getCurrencyInputFocusedStyle(false)
+const focusedInputStyle = getCurrencyInputFocusedStyle(true);
+const unfocusedInputStyle = getCurrencyInputFocusedStyle(false);
 
 export function useCurrencyInputFocusedStyle(isFocused: boolean): FlexProps {
-  return isFocused ? focusedInputStyle : unfocusedInputStyle
+  return isFocused ? focusedInputStyle : unfocusedInputStyle;
 }
