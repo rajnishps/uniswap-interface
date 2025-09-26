@@ -56,6 +56,7 @@ import { SwapTab } from "uniswap/src/types/screens/interface";
 import { isMobileWeb } from "utilities/src/platform";
 import { noop } from "utilities/src/react/noop";
 import { isIFramed } from "utils/isIFramed";
+import SwapElements from "./SwapElements";
 
 export default function SwapPage() {
   const navigate = useNavigate();
@@ -96,6 +97,7 @@ export default function SwapPage() {
           />
         </WebFORNudgeProvider>
       </PageWrapper>
+      <SwapElements />
       {location.pathname === "/swap" && <SwitchLocaleLink />}
     </Trace>
   );

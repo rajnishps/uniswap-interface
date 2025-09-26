@@ -1,66 +1,95 @@
-import { LoadingBubble } from 'components/Tokens/loading'
-import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
-import { Fragment, memo, useMemo } from 'react'
-import { useTranslation } from 'react-i18next'
-import { use24hProtocolVolume, useDailyTVLWithChange } from 'state/explore/protocolStats'
-import { Flex, isTouchable, Popover, Text, useMedia, useShadowPropsMedium } from 'ui/src'
-import { zIndexes } from 'ui/src/theme'
-import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { NumberType } from 'utilities/src/format/types'
+import { LoadingBubble } from "components/Tokens/loading";
+import { DeltaArrow } from "components/Tokens/TokenDetails/Delta";
+import { Fragment, memo, useMemo } from "react";
+import { useTranslation } from "react-i18next";
+import {
+  use24hProtocolVolume,
+  useDailyTVLWithChange,
+} from "state/explore/protocolStats";
+import {
+  Flex,
+  isTouchable,
+  Popover,
+  Text,
+  useMedia,
+  useShadowPropsMedium,
+} from "ui/src";
+import { zIndexes } from "ui/src/theme";
+import { useLocalizationContext } from "uniswap/src/features/language/LocalizationContext";
+import { NumberType } from "utilities/src/format/types";
 
 interface ExploreStatSectionData {
-  label: string
-  value: string
-  change: number
+  label: string;
+  value: string;
+  change: number;
   protocolPopoverFormattedData?: {
-    label: string
-    value?: number
-  }[]
+    label: string;
+    value?: number;
+  }[];
 }
 
 const ExploreStatsSection = () => {
-  const media = useMedia()
-  const { t } = useTranslation()
-  const { convertFiatAmountFormatted } = useLocalizationContext()
+  const media = useMedia();
+  const { t } = useTranslation();
+  const { convertFiatAmountFormatted } = useLocalizationContext();
 
   const {
     protocolVolumes,
     totalVolume,
     totalChangePercent: volume24hChangePercent,
     isLoading: isVolumeLoading,
-  } = use24hProtocolVolume()
+  } = use24hProtocolVolume();
   const {
     totalTVL,
     protocolTVL,
     totalChangePercent: totalTVL24hrChangePercent,
     protocolChangePercent,
     isLoading: isTVLLoading,
-  } = useDailyTVLWithChange()
+  } = useDailyTVLWithChange();
 
-  const isStatDataLoading = isVolumeLoading || isTVLLoading
+  const isStatDataLoading = isVolumeLoading || isTVLLoading;
 
   const exploreStatsSectionData = useMemo(() => {
-    const formatPrice = (price: number) => convertFiatAmountFormatted(price, NumberType.FiatTokenPrice)
+    const formatPrice = (price: number) =>
+      convertFiatAmountFormatted(price, NumberType.FiatTokenPrice);
 
     const stats = [
       {
-        label: t('stats.volume.1d.long'),
+        label: t("stats.volume.1d.long"),
         value: formatPrice(totalVolume),
         change: volume24hChangePercent,
         protocolPopoverFormattedData: [
-          { label: t('common.protocol.v4'), value: protocolVolumes.v4 },
-          { label: t('common.protocol.v3'), value: protocolVolumes.v3 },
-          { label: t('common.protocol.v2'), value: protocolVolumes.v2 },
+          { label: t("common.protocol.v4"), value: protocolVolumes.v4 },
+          { label: t("common.protocol.v3"), value: protocolVolumes.v3 },
+          { label: t("common.protocol.v2"), value: protocolVolumes.v2 },
         ],
       },
-      { label: t('common.totalUniswapTVL'), value: formatPrice(totalTVL), change: totalTVL24hrChangePercent },
-      { label: t('explore.v2TVL'), value: formatPrice(protocolTVL.v2), change: protocolChangePercent.v2 },
-      { label: t('explore.v3TVL'), value: formatPrice(protocolTVL.v3), change: protocolChangePercent.v3 },
-      { label: t('explore.v4TVL'), value: formatPrice(protocolTVL.v4), change: protocolChangePercent.v4 },
-    ]
+      {
+        label: t("common.totalUniswapTVL"),
+        value: formatPrice(totalTVL),
+        change: totalTVL24hrChangePercent,
+      },
+      {
+        label: t("explore.v2TVL"),
+        value: formatPrice(protocolTVL.v2),
+        change: protocolChangePercent.v2,
+      },
+      {
+        label: t("explore.v3TVL"),
+        value: formatPrice(protocolTVL.v3),
+        change: protocolChangePercent.v3,
+      },
+      {
+        label: t("explore.v4TVL"),
+        value: formatPrice(protocolTVL.v4),
+        change: protocolChangePercent.v4,
+      },
+    ];
 
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    return stats.filter((state): state is Exclude<typeof state, null> => state !== null)
+    return stats.filter(
+      (state): state is Exclude<typeof state, null> => state !== null
+    );
   }, [
     t,
     convertFiatAmountFormatted,
@@ -77,20 +106,20 @@ const ExploreStatsSection = () => {
     protocolChangePercent.v2,
     protocolChangePercent.v3,
     protocolChangePercent.v4,
-  ])
+  ]);
 
   return (
     <Flex row width="100%">
       {exploreStatsSectionData.map((data, index) => (
         <Flex
           key={data.label}
-          borderLeftWidth={index === 0 ? 0 : '$spacing1'}
+          borderLeftWidth={index === 0 ? 0 : "$spacing1"}
           borderColor="$surface3"
-          pl={index == 0 ? 0 : '$spacing24'}
+          pl={index == 0 ? 0 : "$spacing24"}
           flex={1}
-          cursor={data.protocolPopoverFormattedData ? 'pointer' : 'default'}
+          cursor={data.protocolPopoverFormattedData ? "pointer" : "default"}
           transition="opacity 0.3s ease, transform 0.3s ease"
-          display={media.md && index > 1 ? 'none' : 'flex'}
+          display={media.md && index > 1 ? "none" : "flex"}
         >
           {isTouchable || !data.protocolPopoverFormattedData ? (
             <StatDisplay data={data} isLoading={isStatDataLoading} />
@@ -100,54 +129,73 @@ const ExploreStatsSection = () => {
         </Flex>
       ))}
     </Flex>
-  )
-}
+  );
+};
 
-export default ExploreStatsSection
+export default ExploreStatsSection;
 
 interface StatDisplayProps {
-  data: ExploreStatSectionData
-  isLoading?: boolean
-  isHoverable?: boolean
+  data: ExploreStatSectionData;
+  isLoading?: boolean;
+  isHoverable?: boolean;
 }
 
-const StatDisplay = memo(({ data, isLoading, isHoverable }: StatDisplayProps) => {
-  const { formatPercent } = useLocalizationContext()
-  const { t } = useTranslation()
+const StatDisplay = memo(
+  ({ data, isLoading, isHoverable }: StatDisplayProps) => {
+    const { formatPercent } = useLocalizationContext();
+    const { t } = useTranslation();
 
-  return (
-    <Flex group gap="$spacing4" animation="simple" minHeight="$spacing60">
-      <Text variant="body4" color="$neutral2" $group-hover={{ color: isHoverable ? '$neutral2Hovered' : '$neutral2' }}>
-        {data.label}
-      </Text>
-      {isLoading ? (
-        <LoadingBubble height="24px" width="80px" />
-      ) : (
-        <Text variant="subheading1" color="$neutral1">
-          {data.value}
+    return (
+      <Flex group gap="$spacing4" animation="simple" minHeight="$spacing60">
+        <Text
+          variant="body4"
+          color="$neutral2"
+          $group-hover={{
+            color: isHoverable ? "$neutral2Hovered" : "$neutral2",
+          }}
+        >
+          {data.label}
         </Text>
-      )}
-      <Flex row alignItems="center" gap="$spacing2" style={{ fontSize: 12 }} minHeight="$spacing16">
         {isLoading ? (
-          <LoadingBubble height="12px" width="60px" />
+          <LoadingBubble height="24px" width="80px" />
         ) : (
-          <Fragment>
-            <DeltaArrow delta={data.change} formattedDelta={formatPercent(Math.abs(data.change))} size={12} />
-            <Text variant="body4" color="$neutral1">
-              {formatPercent(Math.abs(data.change))} {t('common.today').toLocaleLowerCase()}
-            </Text>
-          </Fragment>
+          <Text variant="subheading1" color="$neutral1">
+            {data.value}
+          </Text>
         )}
+        <Flex
+          row
+          alignItems="center"
+          gap="$spacing2"
+          style={{ fontSize: 12 }}
+          minHeight="$spacing16"
+        >
+          {isLoading ? (
+            <LoadingBubble height="12px" width="60px" />
+          ) : (
+            <Fragment>
+              <DeltaArrow
+                delta={data.change}
+                formattedDelta={formatPercent(Math.abs(data.change))}
+                size={12}
+              />
+              <Text variant="body4" color="$neutral1">
+                {formatPercent(Math.abs(data.change))}{" "}
+                {t("common.today").toLocaleLowerCase()}
+              </Text>
+            </Fragment>
+          )}
+        </Flex>
       </Flex>
-    </Flex>
-  )
-})
+    );
+  }
+);
 
-StatDisplay.displayName = 'StatDisplay'
+StatDisplay.displayName = "StatDisplay";
 
 const StatDisplayWithPopover = memo(({ data, isLoading }: StatDisplayProps) => {
-  const shadowProps = useShadowPropsMedium()
-  const { convertFiatAmountFormatted } = useLocalizationContext()
+  const shadowProps = useShadowPropsMedium();
+  const { convertFiatAmountFormatted } = useLocalizationContext();
 
   return (
     <Popover hoverable placement="bottom-start" offset={{ mainAxis: 10 }}>
@@ -171,14 +219,19 @@ const StatDisplayWithPopover = memo(({ data, isLoading }: StatDisplayProps) => {
                 <Text variant="body4" color="neutral2">
                   {item.label}
                 </Text>
-                <Text variant="body4">{convertFiatAmountFormatted(item.value ?? 0, NumberType.FiatTokenPrice)}</Text>
+                <Text variant="body4">
+                  {convertFiatAmountFormatted(
+                    item.value ?? 0,
+                    NumberType.FiatTokenPrice
+                  )}
+                </Text>
               </Flex>
-            )
+            );
           })}
         </Flex>
       </Popover.Content>
     </Popover>
-  )
-})
+  );
+});
 
-StatDisplayWithPopover.displayName = 'StatDisplayWithPopover'
+StatDisplayWithPopover.displayName = "StatDisplayWithPopover";

@@ -1,8 +1,11 @@
-import { OrderDirection } from 'appGraphql/data/util'
-import { Percent } from '@uniswap/sdk-core'
-import { FeeData } from 'components/Liquidity/Create/types'
-import { BIPS_BASE } from 'uniswap/src/constants/misc'
-import { ProtocolVersion, Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { OrderDirection } from "appGraphql/data/util";
+import { Percent } from "@uniswap/sdk-core";
+import { FeeData } from "components/Liquidity/Create/types";
+import { BIPS_BASE } from "uniswap/src/constants/misc";
+import {
+  ProtocolVersion,
+  Token,
+} from "uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks";
 
 export function sortPools(pools: TablePool[], sortState: PoolTableSortState) {
   return pools.sort((a, b) => {
@@ -10,31 +13,40 @@ export function sortPools(pools: TablePool[], sortState: PoolTableSortState) {
       case PoolSortFields.VolOverTvl:
         return sortState.sortDirection === OrderDirection.Desc
           ? b.volOverTvl - a.volOverTvl
-          : a.volOverTvl - b.volOverTvl
+          : a.volOverTvl - b.volOverTvl;
       case PoolSortFields.Volume24h:
-        return sortState.sortDirection === OrderDirection.Desc ? b.volume24h - a.volume24h : a.volume24h - b.volume24h
+        return sortState.sortDirection === OrderDirection.Desc
+          ? b.volume24h - a.volume24h
+          : a.volume24h - b.volume24h;
       case PoolSortFields.Volume30D:
-        return sortState.sortDirection === OrderDirection.Desc ? b.volume30d - a.volume30d : a.volume30d - b.volume30d
+        return sortState.sortDirection === OrderDirection.Desc
+          ? b.volume30d - a.volume30d
+          : a.volume30d - b.volume30d;
       case PoolSortFields.Apr:
         return sortState.sortDirection === OrderDirection.Desc
           ? b.apr.greaterThan(a.apr)
             ? 1
             : -1
           : a.apr.greaterThan(b.apr)
-            ? 1
-            : -1
+          ? 1
+          : -1;
       default:
-        return sortState.sortDirection === OrderDirection.Desc ? b.tvl - a.tvl : a.tvl - b.tvl
+        return sortState.sortDirection === OrderDirection.Desc
+          ? b.tvl - a.tvl
+          : a.tvl - b.tvl;
     }
-  })
+  });
 }
 
-export function calculate1DVolOverTvl(volume24h: number | undefined, tvl: number | undefined): number | undefined {
+export function calculate1DVolOverTvl(
+  volume24h: number | undefined,
+  tvl: number | undefined
+): number | undefined {
   if (!volume24h || !tvl) {
-    return undefined
+    return undefined;
   }
 
-  return volume24h / tvl
+  return volume24h / tvl;
 }
 
 /**
@@ -49,41 +61,44 @@ export function calculateApr({
   tvl,
   feeTier,
 }: {
-  volume24h?: number
-  tvl?: number
-  feeTier?: number
+  volume24h?: number;
+  tvl?: number;
+  feeTier?: number;
 }): Percent {
   if (!volume24h || !feeTier || !tvl || !Math.round(tvl)) {
-    return new Percent(0)
+    return new Percent(0);
   }
-  return new Percent(Math.round(volume24h * (feeTier / (BIPS_BASE * 100)) * 365), Math.round(tvl))
+  return new Percent(
+    Math.round(volume24h * (feeTier / (BIPS_BASE * 100)) * 365),
+    Math.round(tvl)
+  );
 }
 
 export interface TablePool {
-  hash: string
-  token0: Token
-  token1: Token
-  tvl: number
-  volume24h: number
-  volume30d: number
-  apr: Percent
-  volOverTvl: number
-  feeTier: FeeData
-  protocolVersion: ProtocolVersion
-  hookAddress?: string
-  boostedApr?: number
+  hash: string;
+  token0: Token;
+  token1: Token;
+  tvl: number;
+  volume24h: number;
+  volume30d: number;
+  apr: Percent;
+  volOverTvl: number;
+  feeTier: FeeData;
+  protocolVersion: ProtocolVersion;
+  hookAddress?: string;
+  boostedApr?: number;
 }
 
 export enum PoolSortFields {
-  TVL = 'TVL',
-  Apr = 'APR',
-  RewardApr = 'Reward APR',
-  Volume24h = '1 day volume',
-  Volume30D = '30 day volume',
-  VolOverTvl = '1 day volume/TVL',
+  TVL = "TVL",
+  Apr = "APR",
+  RewardApr = "Reward APR",
+  Volume24h = "1 day volume",
+  Volume30D = "30 day volume",
+  VolOverTvl = "1 day volume/TVL",
 }
 
 export type PoolTableSortState = {
-  sortBy: PoolSortFields
-  sortDirection: OrderDirection
-}
+  sortBy: PoolSortFields;
+  sortDirection: OrderDirection;
+};
