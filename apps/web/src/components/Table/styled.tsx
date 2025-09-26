@@ -83,14 +83,19 @@ const TableRow = styled(Flex, {
   row: true,
   alignItems: "center",
   // width: "fit-content",
-  borderColor: "$surface3",
+  borderColor: "$surface3Hovered",
   backgroundColor: "#00000010",
   borderStyle: "solid",
   borderWidth: 1,
   borderRadius: "$rounded12",
   marginTop: "$spacing12",
   minWidth: "100%",
+  width: "fit-content",
   height: "100%",
+  $md: {
+    height: "60px",
+    // flexWrap: "wrap",
+  },
 });
 
 export const DataRow = styled(TableRow, {

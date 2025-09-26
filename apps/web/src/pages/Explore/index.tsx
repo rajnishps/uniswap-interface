@@ -250,7 +250,7 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
               row
               gap="$spacing8"
               justifyContent="flex-start"
-              $md={{ width: "100%" }}
+              $md={{ width: "100%", mt: "$spacing32" }}
             >
               {currentKey === ExploreTab.Pools && (
                 <Flex row>

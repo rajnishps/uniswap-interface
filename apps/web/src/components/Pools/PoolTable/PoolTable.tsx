@@ -43,7 +43,7 @@ import { useTranslation } from "react-i18next";
 import { giveExploreStatDefaultValue, TABLE_PAGE_SIZE } from "state/explore";
 import { useExploreContextTopPools } from "state/explore/topPools";
 import { PoolStat } from "state/explore/types";
-import { Flex, styled, Text, useMedia } from "ui/src";
+import { Button, Flex, styled, Text, useMedia } from "ui/src";
 import { LearnMoreLink } from "uniswap/src/components/text/LearnMoreLink";
 import { getNativeAddress } from "uniswap/src/constants/addresses";
 import { BIPS_BASE } from "uniswap/src/constants/misc";
@@ -376,14 +376,18 @@ export function PoolsTable({
               </HeaderCell>
             ),
             cell: (index) => (
-              <Cell justifyContent="flex-start" loading={showLoadingSkeleton}>
+              <Cell
+                justifyContent="flex-start"
+                flexDirection="column"
+                loading={showLoadingSkeleton}
+              >
                 <TableText>{index.getValue?.()}</TableText>
               </Cell>
             ),
           })
         : null,
-      columnHelper.accessor((row) => row.poolDescription, {
-        id: "poolDescription",
+      columnHelper.accessor((row) => row.protocolVersion, {
+        id: "protocolVersion",
         size: media.lg ? 170 : 180,
         header: () => (
           <HeaderCell justifyContent="flex-start">
@@ -392,9 +396,17 @@ export function PoolsTable({
             </Text>
           </HeaderCell>
         ),
-        cell: (poolDescription) => (
-          <Cell justifyContent="flex-start" loading={showLoadingSkeleton}>
-            {poolDescription.getValue?.()}
+        cell: (protocolVersion) => (
+          <Cell
+            justifyContent="flex-start"
+            gap="$spacing2"
+            flexDirection="column"
+            loading={showLoadingSkeleton}
+          >
+            <TableText color="$neutral2" variant="body3">
+              HYPE/USDT
+            </TableText>
+            <TableText>{protocolVersion.getValue?.() ?? "-"}</TableText>
           </Cell>
         ),
       }),
@@ -409,7 +421,15 @@ export function PoolsTable({
           </HeaderCell>
         ),
         cell: (protocolVersion) => (
-          <Cell justifyContent="flex-end" loading={showLoadingSkeleton}>
+          <Cell
+            justifyContent="flex-start"
+            gap="$spacing2"
+            flexDirection="column"
+            loading={showLoadingSkeleton}
+          >
+            <TableText color="$neutral2" variant="body3">
+              TVL
+            </TableText>
             <TableText>{protocolVersion.getValue?.() ?? "-"}</TableText>
           </Cell>
         ),
@@ -425,7 +445,15 @@ export function PoolsTable({
           </HeaderCell>
         ),
         cell: (feeTier) => (
-          <Cell loading={showLoadingSkeleton}>
+          <Cell
+            justifyContent="flex-start"
+            gap="$spacing2"
+            flexDirection="column"
+            loading={showLoadingSkeleton}
+          >
+            <TableText color="$neutral2" variant="body3">
+              Best APR
+            </TableText>
             <TableText>
               {feeTier.getValue?.()
                 ? `${
@@ -455,7 +483,15 @@ export function PoolsTable({
               </HeaderCell>
             ),
             cell: (tvl) => (
-              <Cell loading={showLoadingSkeleton}>
+              <Cell
+                justifyContent="flex-start"
+                gap="$spacing2"
+                flexDirection="column"
+                loading={showLoadingSkeleton}
+              >
+                <TableText color="$neutral2" variant="body3">
+                  Volume 24H
+                </TableText>
                 <TableText>
                   {convertFiatAmountFormatted(
                     tvl.getValue?.(),
@@ -480,7 +516,15 @@ export function PoolsTable({
               </HeaderCell>
             ),
             cell: (oneDayApr) => (
-              <Cell loading={showLoadingSkeleton}>
+              <Cell
+                justifyContent="flex-start"
+                gap="$spacing2"
+                flexDirection="column"
+                loading={showLoadingSkeleton}
+              >
+                <TableText color="$neutral2" variant="body3">
+                  Fees 24H
+                </TableText>{" "}
                 <TableText>
                   {formatPercent(oneDayApr.getValue?.()?.toSignificant())}
                 </TableText>
@@ -488,119 +532,189 @@ export function PoolsTable({
             ),
           })
         : null,
-      !hiddenColumns?.includes(PoolSortFields.RewardApr) &&
-      isLPIncentivesEnabled
-        ? columnHelper.accessor((row) => row.rewardApr, {
-            id: PoolSortFields.RewardApr,
-            size: 130,
-            header: () => (
-              <HeaderCell>
-                <PoolTableHeader
-                  category={PoolSortFields.RewardApr}
-                  isCurrentSortMethod={sortMethod === PoolSortFields.RewardApr}
-                  direction={orderDirection}
-                />
-              </HeaderCell>
-            ),
-            sortingFn: "basic",
-            cell: ({ row }: { row?: Row<PoolTableValues> }) => {
-              if (!row?.original) {
-                return null;
-              }
-
-              const { apr, token0CurrencyId, token1CurrencyId, rewardApr } =
-                row.original;
-
-              return (
-                <RewardAprCell
-                  apr={apr}
-                  rewardApr={rewardApr}
-                  token0CurrencyId={token0CurrencyId}
-                  token1CurrencyId={token1CurrencyId}
-                  isLoading={showLoadingSkeleton}
-                />
-              );
-            },
-          })
-        : null,
-      !hiddenColumns?.includes(PoolSortFields.Volume24h)
-        ? columnHelper.accessor((row) => row.volume24h, {
-            id: "volume24h",
+      !hiddenColumns?.includes(PoolSortFields.Apr)
+        ? columnHelper.accessor((row) => row.apr, {
+            id: "apr",
             size: 120,
             header: () => (
               <HeaderCell>
                 <PoolTableHeader
-                  category={PoolSortFields.Volume24h}
-                  isCurrentSortMethod={sortMethod === PoolSortFields.Volume24h}
+                  category={PoolSortFields.Apr}
+                  isCurrentSortMethod={sortMethod === PoolSortFields.Apr}
                   direction={orderDirection}
                 />
               </HeaderCell>
             ),
-            cell: (volume24h) => {
-              return (
-                <Cell loading={showLoadingSkeleton}>
-                  <TableText>
-                    {convertFiatAmountFormatted(
-                      volume24h?.getValue?.(),
-                      NumberType.FiatTokenStats
-                    )}
-                  </TableText>
-                </Cell>
-              );
-            },
-          })
-        : null,
-      !hiddenColumns?.includes(PoolSortFields.Volume30D)
-        ? columnHelper.accessor((row) => row.volume30d, {
-            id: "volume30Day",
-            size: 120,
-            header: () => (
-              <HeaderCell>
-                <PoolTableHeader
-                  category={PoolSortFields.Volume30D}
-                  isCurrentSortMethod={sortMethod === PoolSortFields.Volume30D}
-                  direction={orderDirection}
-                />
-              </HeaderCell>
-            ),
-            cell: (volumeWeek) => (
-              <Cell loading={showLoadingSkeleton}>
-                <TableText>
-                  {convertFiatAmountFormatted(
-                    volumeWeek.getValue?.(),
-                    NumberType.FiatTokenStats
-                  )}
-                </TableText>
+            cell: (oneDayApr) => (
+              <Cell
+                justifyContent="flex-start"
+                gap="$spacing2"
+                flexDirection="column"
+                loading={showLoadingSkeleton}
+              >
+                <button
+                  style={{
+                    backgroundColor: "white",
+                    color: "black",
+                    height: "32px",
+                    width: "140px",
+                    borderRadius: "8px",
+                  }}
+                >
+                  Deposit Liquidity
+                </button>
               </Cell>
             ),
           })
         : null,
-      !hiddenColumns?.includes(PoolSortFields.VolOverTvl)
-        ? columnHelper.accessor((row) => row.volOverTvl, {
-            id: "volOverTvl",
+      !hiddenColumns?.includes(PoolSortFields.Apr)
+        ? columnHelper.accessor((row) => row.apr, {
+            id: "apr",
             size: 120,
             header: () => (
               <HeaderCell>
                 <PoolTableHeader
-                  category={PoolSortFields.VolOverTvl}
-                  isCurrentSortMethod={sortMethod === PoolSortFields.VolOverTvl}
+                  category={PoolSortFields.Apr}
+                  isCurrentSortMethod={sortMethod === PoolSortFields.Apr}
                   direction={orderDirection}
                 />
               </HeaderCell>
             ),
-            cell: (volOverTvl) => (
-              <Cell loading={showLoadingSkeleton}>
-                <TableText>
-                  {formatNumberOrString({
-                    value: volOverTvl.getValue?.(),
-                    type: NumberType.TokenQuantityStats,
-                    placeholder: "-",
-                  })}
-                </TableText>
+            cell: (oneDayApr) => (
+              <Cell
+                justifyContent="flex-start"
+                gap="$spacing2"
+                flexDirection="column"
+                loading={showLoadingSkeleton}
+              >
+                <button
+                  style={{
+                    color: "white",
+                    backgroundColor: "black",
+                    height: "32px",
+                    width: "80px",
+                    borderRadius: "8px",
+                  }}
+                >
+                  Swap
+                </button>
               </Cell>
             ),
           })
         : null,
+      // !hiddenColumns?.includes(PoolSortFields.RewardApr) &&
+      // isLPIncentivesEnabled
+      //   ? columnHelper.accessor((row) => row.rewardApr, {
+      //       id: PoolSortFields.RewardApr,
+      //       size: 130,
+      //       header: () => (
+      //         <HeaderCell>
+      //           <PoolTableHeader
+      //             category={PoolSortFields.RewardApr}
+      //             isCurrentSortMethod={sortMethod === PoolSortFields.RewardApr}
+      //             direction={orderDirection}
+      //           />
+      //         </HeaderCell>
+      //       ),
+      //       sortingFn: "basic",
+      //       cell: ({ row }: { row?: Row<PoolTableValues> }) => {
+      //         if (!row?.original) {
+      //           return null;
+      //         }
+
+      //         const { apr, token0CurrencyId, token1CurrencyId, rewardApr } =
+      //           row.original;
+
+      //         return (
+      //           <RewardAprCell
+      //             apr={apr}
+      //             rewardApr={rewardApr}
+      //             token0CurrencyId={token0CurrencyId}
+      //             token1CurrencyId={token1CurrencyId}
+      //             isLoading={showLoadingSkeleton}
+      //           />
+      //         );
+      //       },
+      //     })
+      //   : null,
+      // !hiddenColumns?.includes(PoolSortFields.Volume24h)
+      //   ? columnHelper.accessor((row) => row.volume24h, {
+      //       id: "volume24h",
+      //       size: 120,
+      //       header: () => (
+      //         <HeaderCell>
+      //           <PoolTableHeader
+      //             category={PoolSortFields.Volume24h}
+      //             isCurrentSortMethod={sortMethod === PoolSortFields.Volume24h}
+      //             direction={orderDirection}
+      //           />
+      //         </HeaderCell>
+      //       ),
+      //       cell: (volume24h) => {
+      //         return (
+      //           <Cell loading={showLoadingSkeleton}>
+      //             <TableText>
+      //               {convertFiatAmountFormatted(
+      //                 volume24h?.getValue?.(),
+      //                 NumberType.FiatTokenStats
+      //               )}
+      //             </TableText>
+      //           </Cell>
+      //         );
+      //       },
+      //     })
+      //   : null,
+      // !hiddenColumns?.includes(PoolSortFields.Volume30D)
+      //   ? columnHelper.accessor((row) => row.volume30d, {
+      //       id: "volume30Day",
+      //       size: 120,
+      //       header: () => (
+      //         <HeaderCell>
+      //           <PoolTableHeader
+      //             category={PoolSortFields.Volume30D}
+      //             isCurrentSortMethod={sortMethod === PoolSortFields.Volume30D}
+      //             direction={orderDirection}
+      //           />
+      //         </HeaderCell>
+      //       ),
+      //       cell: (volumeWeek) => (
+      //         <Cell loading={showLoadingSkeleton}>
+      //           <TableText>
+      //             {convertFiatAmountFormatted(
+      //               volumeWeek.getValue?.(),
+      //               NumberType.FiatTokenStats
+      //             )}
+      //           </TableText>
+      //         </Cell>
+      //       ),
+      //     })
+      //   : null,
+      // !hiddenColumns?.includes(PoolSortFields.VolOverTvl)
+      //   ? columnHelper.accessor((row) => row.volOverTvl, {
+      //       id: "volOverTvl",
+      //       size: 120,
+      //       header: () => (
+      //         <HeaderCell>
+      //           <PoolTableHeader
+      //             category={PoolSortFields.VolOverTvl}
+      //             isCurrentSortMethod={sortMethod === PoolSortFields.VolOverTvl}
+      //             direction={orderDirection}
+      //           />
+      //         </HeaderCell>
+      //       ),
+      //       cell: (volOverTvl) => (
+      //         <Cell loading={showLoadingSkeleton}>
+      //           <TableText>
+      //             {formatNumberOrString({
+      //               value: volOverTvl.getValue?.(),
+      //               type: NumberType.TokenQuantityStats,
+      //               placeholder: "-",
+      //             })}
+      //           </TableText>
+      //         </Cell>
+      //       ),
+      //     })
+      //   : null,
     ];
     return filteredColumns.filter(
       (column): column is NonNullable<(typeof filteredColumns)[number]> =>
