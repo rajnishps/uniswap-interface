@@ -71,6 +71,33 @@ const Container = styled.div<{ live?: boolean }>`
   @media (max-width: 768px) {
   }
 `;
+const Container2 = styled.div<{ live?: boolean }>`
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  border-radius: 20px;
+
+  width: 100%;
+  height: 100%;
+  max-height: 230px;
+
+  padding: 32px;
+
+  background: linear-gradient(180deg, #00c3a020 0%, #006e6a20 100%);
+  border-radius: 20px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+
+  @media (max-width: 1024px) {
+    padding: 24px;
+  }
+  @media (max-width: 768px) {
+    height: 100px;
+  }
+`;
 const SpriteContainer = motion(styled.div`
   pointer-events: none;
   diplay: flex;
@@ -158,6 +185,28 @@ export function StatCard(props: StatCardProps) {
         {props.value}
       </Text>
     </Container>
+  );
+}
+export function StatCard2(props: StatCardProps) {
+  const theme = useTheme();
+
+  return (
+    <Container2 style={props.style}>
+      {props.icon && (
+        <img src={props.icon} alt={props.title} width={100} height={100} />
+      )}
+      <Flex row alignItems="center" gap="$gap4">
+        <Title color={theme.neutral1}>{props.title}</Title>
+      </Flex>
+      <Text
+        fontSize={16}
+        fontWeight={500}
+        color={theme.neutral2}
+        allowFontScaling={false}
+      >
+        {props.value}
+      </Text>
+    </Container2>
   );
 }
 

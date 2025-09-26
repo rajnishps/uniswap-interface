@@ -210,6 +210,7 @@ export function Table<T extends RowData>({
   maxHeight,
   defaultPinnedColumns = [],
   forcePinning = false,
+  showHeader = false,
 }: {
   columns: ColumnDef<T, any>[];
   data: T[];
@@ -220,6 +221,7 @@ export function Table<T extends RowData>({
   maxHeight?: number;
   defaultPinnedColumns?: string[];
   forcePinning?: boolean;
+  showHeader?: boolean;
 }) {
   const [loadingMore, setLoadingMore] = useState(false);
   const [showScrollRightButton, setShowScrollRightButton] = useState(false);
@@ -427,58 +429,60 @@ export function Table<T extends RowData>({
           position="relative"
           ref={parentRef}
         >
-          {/* <TableHead $isSticky={isSticky} $top={headerHeight}>
-            {hasPinnedColumns && (
-              <>
-                <Flex
-                  position="absolute"
-                  top={scrollButtonTop}
-                  left={table.getLeftTotalSize()}
-                  pl="$spacing12"
-                  zIndex={zIndexes.default}
-                >
-                  <ScrollButton
-                    onPress={onScrollButtonPress("left")}
-                    opacity={showScrollLeftButton ? 1 : 0}
-                    direction="left"
-                  />
-                </Flex>
-                <Flex
-                  position="absolute"
-                  top={scrollButtonTop}
-                  right={0}
-                  pr="$spacing12"
-                  zIndex={zIndexes.default}
-                >
-                  <ScrollButton
-                    onPress={onScrollButtonPress("right")}
-                    opacity={showScrollRightButton ? 1 : 0}
-                    direction="right"
-                  />
-                </Flex>
-                <TableScrollMask
-                  top={isSticky ? "$spacing12" : 0}
-                  zIndex={zIndexes.dropdown - 1}
-                  borderTopRightRadius="$rounded20"
-                />
-              </>
-            )}
-            <ScrollSyncPane group="table-sync">
-              <HeaderRow dimmed={!!error}>
-                {table.getFlatHeaders().map((header) => (
-                  <CellContainer
-                    key={header.id}
-                    style={getCommonPinningStyles(header.column, colors)}
+          {showHeader && (
+            <TableHead $isSticky={isSticky} $top={headerHeight}>
+              {hasPinnedColumns && (
+                <>
+                  <Flex
+                    position="absolute"
+                    top={scrollButtonTop}
+                    left={table.getLeftTotalSize()}
+                    pl="$spacing12"
+                    zIndex={zIndexes.default}
                   >
-                    {flexRender(
-                      header.column.columnDef.header,
-                      header.getContext()
-                    )}
-                  </CellContainer>
-                ))}
-              </HeaderRow>
-            </ScrollSyncPane>
-          </TableHead> */}
+                    <ScrollButton
+                      onPress={onScrollButtonPress("left")}
+                      opacity={showScrollLeftButton ? 1 : 0}
+                      direction="left"
+                    />
+                  </Flex>
+                  <Flex
+                    position="absolute"
+                    top={scrollButtonTop}
+                    right={0}
+                    pr="$spacing12"
+                    zIndex={zIndexes.default}
+                  >
+                    <ScrollButton
+                      onPress={onScrollButtonPress("right")}
+                      opacity={showScrollRightButton ? 1 : 0}
+                      direction="right"
+                    />
+                  </Flex>
+                  <TableScrollMask
+                    top={isSticky ? "$spacing12" : 0}
+                    zIndex={zIndexes.dropdown - 1}
+                    borderTopRightRadius="$rounded20"
+                  />
+                </>
+              )}
+              <ScrollSyncPane group="table-sync">
+                <HeaderRow dimmed={!!error}>
+                  {table.getFlatHeaders().map((header) => (
+                    <CellContainer
+                      key={header.id}
+                      style={getCommonPinningStyles(header.column, colors)}
+                    >
+                      {flexRender(
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
+                    </CellContainer>
+                  ))}
+                </HeaderRow>
+              </ScrollSyncPane>
+            </TableHead>
+          )}
           {hasPinnedColumns && (
             <TableScrollMask
               zIndex={zIndexes.default}

@@ -126,7 +126,7 @@ export const HeaderRow = styled(TableRow, {
   borderColor: "$surface3",
   borderRadius: "$rounded20",
   width: "unset",
-  backgroundColor: "$surface1Hovered",
+  // backgroundColor: "$surface1Hovered",
   scrollbarWidth: "none",
   className: "scrollbar-hidden",
 
