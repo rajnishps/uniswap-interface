@@ -65,4 +65,5 @@ export const paths = [
   "/extension/uninstall",
   "/launchpad",
   "/airdrop",
+  "/dashboard",
 ];

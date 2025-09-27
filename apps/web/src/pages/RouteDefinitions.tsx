@@ -65,6 +65,7 @@ const ExtensionUninstall = lazy(
 const Portfolio = lazy(() => import("pages/Portfolio/Portfolio"));
 const Launchpad = lazy(() => import("pages/Launchpad/index"));
 const Airdrop = lazy(() => import("pages/Airdrop/index"));
+const Dashboard = lazy(() => import("pages/Dashboard/index"));
 
 interface RouterConfig {
   browserRouterEnabled?: boolean;
@@ -417,6 +418,12 @@ export const routes: RouteDefinition[] = [
   createRouteDefinition({
     path: "/airdrop",
     getElement: () => <Airdrop />,
+    getTitle: () => StaticTitlesAndDescriptions.AirdropTitle,
+    getDescription: () => StaticTitlesAndDescriptions.AirdropDescription,
+  }),
+  createRouteDefinition({
+    path: "/dashboard",
+    getElement: () => <Dashboard />,
     getTitle: () => StaticTitlesAndDescriptions.AirdropTitle,
     getDescription: () => StaticTitlesAndDescriptions.AirdropDescription,
   }),

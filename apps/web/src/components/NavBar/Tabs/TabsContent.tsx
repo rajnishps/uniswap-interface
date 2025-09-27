@@ -100,6 +100,7 @@ export const useTabsContent = (): TabsSection[] => {
       isActive: pathname.startsWith("/launchpad"),
       icon: <Compass color="$accent1" size="$icon.20" />,
     },
+
     // {
     //   title: t("common.pool"),
     //   href: "/positions",
