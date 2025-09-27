@@ -45,32 +45,90 @@ const Char = motion(styled.div<{ color: string }>`
     line-height: 22px;
   }
 `);
-const Container = styled.div<{ live?: boolean }>`
+
+const Container = styled.div<{ isLeft?: boolean }>`
+  position: relative;
   display: flex;
   flex-direction: column;
-
   align-items: center;
   justify-content: center;
   gap: 16px;
-  border-radius: 20px;
-
   width: 100%;
   height: 100%;
   max-height: 230px;
-
   padding: 32px;
+  border-radius: 20px;
 
   background: linear-gradient(180deg, #00c3a020 0%, #006e6a20 100%);
-  border-radius: 20px;
   box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
-  overflow: hidden;
+  overflow: visible;
 
   @media (max-width: 1024px) {
     padding: 24px;
   }
-  @media (max-width: 768px) {
+
+  .corner {
+    position: absolute;
+
+    background-color: #7fffd6;
+    border-radius: 999px;
+    box-shadow: 0 0 8px #008080;
+    z-index: 2;
+  }
+
+  /* Right-side borders */
+  .top-line.right {
+    top: -12px;
+    right: -20px;
+    height: 4px;
+    width: 120px;
+  }
+  .bottom-line.right {
+    bottom: -12px;
+    right: -20px;
+    height: 4px;
+    width: 120px;
+  }
+  .right-line-top {
+    top: -12px;
+    right: -20px;
+    width: 4px;
+    height: 150px;
+  }
+  .right-line-bottom {
+    bottom: -12px;
+    right: -20px;
+    width: 4px;
+    height: 150px;
+  }
+
+  /* Left-side borders */
+  .top-line.left {
+    top: -12px;
+    left: -20px;
+    height: 4px;
+    width: 120px;
+  }
+  .bottom-line.left {
+    bottom: -12px;
+    left: -20px;
+    height: 4px;
+    width: 120px;
+  }
+  .left-line-top {
+    top: -12px;
+    left: -20px;
+    width: 4px;
+    height: 150px;
+  }
+  .left-line-bottom {
+    bottom: -12px;
+    left: -20px;
+    width: 4px;
+    height: 150px;
   }
 `;
+
 const Container2 = styled.div<{ live?: boolean }>`
   display: flex;
   flex-direction: column;
@@ -154,6 +212,7 @@ type StatCardProps = {
   delay?: number;
   inView?: boolean;
   style?: React.CSSProperties;
+  isLeft?: boolean;
 };
 
 function rotateArray<T>(arr: T[], n: number) {
@@ -169,7 +228,25 @@ export function StatCard(props: StatCardProps) {
   const theme = useTheme();
 
   return (
-    <Container style={props.style}>
+    <Container style={props.style} isLeft={props.isLeft}>
+      {/* Conditionally Render Border */}
+      {props.isLeft == true ? (
+        <>
+          <span className="corner top-line left" />
+          <span className="corner bottom-line left" />
+          <span className="corner left-line-top" />
+          <span className="corner left-line-bottom" />
+        </>
+      ) : props.isLeft == false ? (
+        <>
+          <span className="corner top-line right" />
+          <span className="corner bottom-line right" />
+          <span className="corner right-line-top" />
+          <span className="corner right-line-bottom" />
+        </>
+      ) : (
+        <></>
+      )}
       {props.icon && (
         <img src={props.icon} alt={props.title} width={100} height={100} />
       )}

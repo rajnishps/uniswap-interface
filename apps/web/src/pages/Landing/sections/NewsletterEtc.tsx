@@ -262,6 +262,7 @@ export default function Cards({ inView }: { inView: boolean }) {
             <StatCard
               title={card.title}
               value={card.value}
+              isLeft={isMobile ? false : i % 2 !== 0}
               delay={i * 0.2}
               live={card.live}
               inView={inView}
