@@ -38,7 +38,14 @@ import {
   useUpdateAtom,
 } from "jotai/utils";
 import { exploreProtocolVersionFilterAtom } from "pages/Explore/ProtocolFilter";
-import { memo, ReactElement, useCallback, useEffect, useMemo } from "react";
+import {
+  memo,
+  ReactElement,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import { useTranslation } from "react-i18next";
 import { giveExploreStatDefaultValue, TABLE_PAGE_SIZE } from "state/explore";
 import { useExploreContextTopPools } from "state/explore/topPools";
@@ -219,6 +226,14 @@ function PoolTableHeader({
   );
 }
 
+const TableFilterTabs = [
+  "All",
+  "Hyped Pools",
+  "Incentivized Pools",
+  "Smart Pools",
+  "Standard AMM",
+  "Concentrated Liquidity",
+];
 interface TopPoolTableProps {
   topPools?: PoolStat[];
   isLoading: boolean;
@@ -259,11 +274,49 @@ const TopPoolTable = memo(function TopPoolTable({
   staticSize?: boolean;
   forcePinning?: boolean;
 }) {
+  const [selectedTab, setSelectedTab] = useState("All");
+
   const { topPools, isLoading, isError } = topPoolData;
   const { page, loadMore } = useSimplePagination();
 
+  const handleTabChange = (tab: string) => {
+    setSelectedTab(tab);
+  };
+
   return (
     <TableWrapper data-testid="top-pools-explore-table">
+      <Flex
+        row
+        // maxWidth={MAX_WIDTH_MEDIA_BREAKPOINT}
+        mx="auto"
+        mb="$spacing4"
+        alignItems="center"
+        width="100%"
+        mt="$spacing8"
+        gap="$spacing8"
+        $lg={{
+          row: false,
+          flexDirection: "column",
+          mx: "unset",
+          alignItems: "flex-start",
+        }}
+      >
+        {TableFilterTabs.map((tab) => (
+          <button
+            key={tab}
+            onClick={() => handleTabChange(tab)}
+            style={{
+              padding: "8px 16px",
+              borderRadius: "24px",
+              backgroundColor: selectedTab === tab ? "#03F8C5" : "#00000030",
+              color: selectedTab === tab ? "#000" : "#fff",
+              border: "0px solid #000",
+            }}
+          >
+            {tab}
+          </button>
+        ))}
+      </Flex>
       <PoolsTable
         pools={topPools?.slice(0, page * pageSize)}
         loading={isLoading}
@@ -421,7 +474,8 @@ export function PoolsTable({
             <TableText color="$neutral2" variant="body3">
               HYPE/USDT
             </TableText>
-            <TableText>{protocolVersion.getValue?.() ?? "-"}</TableText>
+            {/* <TableText>{protocolVersion.getValue?.() ?? "-"}</TableText> */}
+            <TableText>Fee: 0.0015%</TableText>
           </Cell>
         ),
       }),
@@ -445,7 +499,8 @@ export function PoolsTable({
             <TableText color="$neutral2" variant="body3">
               TVL
             </TableText>
-            <TableText>{protocolVersion.getValue?.() ?? "-"}</TableText>
+            {/* <TableText>{protocolVersion.getValue?.() ?? "-"}</TableText> */}
+            <TableText>$176,495</TableText>
           </Cell>
         ),
       }),
@@ -469,7 +524,7 @@ export function PoolsTable({
             <TableText color="$neutral2" variant="body3">
               Best APR
             </TableText>
-            <TableText>
+            {/* <TableText>
               {feeTier.getValue?.()
                 ? `${
                     isDynamicFeeTier(feeTier.getValue()!)
@@ -480,7 +535,8 @@ export function PoolsTable({
                         )
                   }`
                 : "-"}
-            </TableText>
+            </TableText> */}
+            <TableText>74.61%</TableText>
           </Cell>
         ),
       }),
@@ -507,12 +563,13 @@ export function PoolsTable({
                 <TableText color="$neutral2" variant="body3">
                   Volume 24H
                 </TableText>
-                <TableText>
+                {/* <TableText>
                   {convertFiatAmountFormatted(
                     tvl.getValue?.(),
                     NumberType.FiatTokenStats
                   )}
-                </TableText>
+                </TableText> */}
+                <TableText>$418,278</TableText>
               </Cell>
             ),
           })
@@ -540,9 +597,10 @@ export function PoolsTable({
                 <TableText color="$neutral2" variant="body3">
                   Fees 24H
                 </TableText>{" "}
-                <TableText>
+                {/* <TableText>
                   {formatPercent(oneDayApr.getValue?.()?.toSignificant())}
-                </TableText>
+                </TableText> */}
+                <TableText>$6.27</TableText>
               </Cell>
             ),
           })

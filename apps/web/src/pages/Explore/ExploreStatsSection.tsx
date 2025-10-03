@@ -1,6 +1,6 @@
 import { LoadingBubble } from "components/Tokens/loading";
 import { DeltaArrow } from "components/Tokens/TokenDetails/Delta";
-import { Fragment, memo, useMemo } from "react";
+import { Fragment, memo, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   use24hProtocolVolume,
@@ -10,6 +10,7 @@ import {
   Flex,
   isTouchable,
   Popover,
+  styled,
   Text,
   useMedia,
   useShadowPropsMedium,
@@ -55,35 +56,30 @@ const ExploreStatsSection = () => {
 
     const stats = [
       {
-        label: t("stats.volume.1d.long"),
+        label: "Total Value Locked",
         value: formatPrice(totalVolume),
         change: volume24hChangePercent,
-        protocolPopoverFormattedData: [
-          { label: t("common.protocol.v4"), value: protocolVolumes.v4 },
-          { label: t("common.protocol.v3"), value: protocolVolumes.v3 },
-          { label: t("common.protocol.v2"), value: protocolVolumes.v2 },
-        ],
       },
       {
-        label: t("common.totalUniswapTVL"),
+        label: "24 Hours Volume",
         value: formatPrice(totalTVL),
         change: totalTVL24hrChangePercent,
       },
       {
-        label: t("explore.v2TVL"),
+        label: "24 Hours Fees",
         value: formatPrice(protocolTVL.v2),
         change: protocolChangePercent.v2,
       },
       {
-        label: t("explore.v3TVL"),
+        label: "24 Hours V3",
         value: formatPrice(protocolTVL.v3),
         change: protocolChangePercent.v3,
       },
-      {
-        label: t("explore.v4TVL"),
-        value: formatPrice(protocolTVL.v4),
-        change: protocolChangePercent.v4,
-      },
+      // {
+      //   label: t("explore.v4TVL"),
+      //   value: formatPrice(protocolTVL.v4),
+      //   change: protocolChangePercent.v4,
+      // },
     ];
 
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
@@ -113,19 +109,19 @@ const ExploreStatsSection = () => {
       {exploreStatsSectionData.map((data, index) => (
         <Flex
           key={data.label}
-          borderLeftWidth={index === 0 ? 0 : "$spacing1"}
-          borderColor="$surface3"
+          // borderLeftWidth={index === 0 ? 0 : "$spacing1"}
+          // borderColor="$surface3"
           pl={index == 0 ? 0 : "$spacing24"}
           flex={1}
-          cursor={data.protocolPopoverFormattedData ? "pointer" : "default"}
+          // cursor={data.protocolPopoverFormattedData ? "pointer" : "default"}
           transition="opacity 0.3s ease, transform 0.3s ease"
           display={media.md && index > 1 ? "none" : "flex"}
         >
-          {isTouchable || !data.protocolPopoverFormattedData ? (
-            <StatDisplay data={data} isLoading={isStatDataLoading} />
-          ) : (
+          {/* {isTouchable || !data.protocolPopoverFormattedData ? ( */}
+          <StatDisplay data={data} isLoading={isStatDataLoading} />
+          {/* ) : (
             <StatDisplayWithPopover data={data} isLoading={isStatDataLoading} />
-          )}
+          )} */}
         </Flex>
       ))}
     </Flex>
@@ -140,15 +136,61 @@ interface StatDisplayProps {
   isHoverable?: boolean;
 }
 
+const BlockFlex = styled(Flex, {
+  background: "linear-gradient(180deg, #00c3a020 0%, #006e6a20 100%)",
+  borderRadius: "$rounded20",
+  boxShadow: "4px 4px 12px rgba(0, 147, 93, 0.15)",
+  p: "$spacing40",
+});
+
+const DataLengths = [7, 15, 30];
+
 const StatDisplay = memo(
   ({ data, isLoading, isHoverable }: StatDisplayProps) => {
     const { formatPercent } = useLocalizationContext();
     const { t } = useTranslation();
 
+    const [dataLength, setDataLength] = useState(30);
+
     return (
-      <Flex group gap="$spacing4" animation="simple" minHeight="$spacing60">
+      <BlockFlex
+        group
+        gap="$spacing4"
+        animation="simple"
+        minHeight="$spacing60"
+      >
+        <Flex row justifyContent="center" gap="$spacing8" mx="auto">
+          {DataLengths.map((length) => (
+            <div
+              key={length}
+              onClick={() => setDataLength(length)}
+              style={{
+                marginBottom: "8px",
+                cursor: "pointer",
+                borderRadius: "12px",
+                padding: "4px 8px",
+                backgroundColor: dataLength === length ? "#00c3a0" : "",
+              }}
+            >
+              <Text
+                variant="subheading2"
+                color={dataLength === length ? "black" : "white"}
+              >
+                {length}D
+              </Text>
+            </div>
+          ))}
+        </Flex>
+        {isLoading ? (
+          <LoadingBubble height="24px" width="80px" />
+        ) : (
+          <Text textAlign="center" variant="heading2" color="$neutral1">
+            {data.value}
+          </Text>
+        )}
         <Text
-          variant="body4"
+          textAlign="center"
+          variant="subheading2"
           color="$neutral2"
           $group-hover={{
             color: isHoverable ? "$neutral2Hovered" : "$neutral2",
@@ -156,37 +198,7 @@ const StatDisplay = memo(
         >
           {data.label}
         </Text>
-        {isLoading ? (
-          <LoadingBubble height="24px" width="80px" />
-        ) : (
-          <Text variant="subheading1" color="$neutral1">
-            {data.value}
-          </Text>
-        )}
-        <Flex
-          row
-          alignItems="center"
-          gap="$spacing2"
-          style={{ fontSize: 12 }}
-          minHeight="$spacing16"
-        >
-          {isLoading ? (
-            <LoadingBubble height="12px" width="60px" />
-          ) : (
-            <Fragment>
-              <DeltaArrow
-                delta={data.change}
-                formattedDelta={formatPercent(Math.abs(data.change))}
-                size={12}
-              />
-              <Text variant="body4" color="$neutral1">
-                {formatPercent(Math.abs(data.change))}{" "}
-                {t("common.today").toLocaleLowerCase()}
-              </Text>
-            </Fragment>
-          )}
-        </Flex>
-      </Flex>
+      </BlockFlex>
     );
   }
 );
