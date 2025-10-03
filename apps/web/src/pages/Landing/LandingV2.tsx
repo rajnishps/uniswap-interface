@@ -44,7 +44,7 @@ function LandingV2({ transition }: { transition?: boolean }) {
 #033128 100% 
 )"
     >
-      <Grain />
+      {/* <Grain /> */}
       <Hero scrollToRef={scrollToRef} transition={transition} />
       <Suspense>
         <Rive />
