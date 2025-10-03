@@ -78,7 +78,7 @@ const SwapElements = () => {
       <img height={240} src="/images/hype-graph.png" alt="" />
 
       {isMobile ? (
-        <Flex gap={16} flexDirection="row">
+        <Flex gap={16} mt={40} flexDirection="row">
           <AnimatedBtcImage src="/images/btc.png" alt="" />
           <AnimatedEthImage src="/images/eth.png" alt="" />
         </Flex>

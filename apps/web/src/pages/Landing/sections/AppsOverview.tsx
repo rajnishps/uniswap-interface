@@ -9,6 +9,50 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router";
 import { Button, Flex } from "ui/src";
 import { Text } from "ui/src";
+import styled from "styled-components";
+
+const Img1 = styled.img`
+  position: absolute;
+  top: 20px;
+  left: -20px;
+  width: 32px;
+  @media (max-width: 768px) {
+    left: 20px;
+    top: -50px;
+  }
+`;
+
+const Img2 = styled.img`
+  position: absolute;
+  top: -50px;
+  right: -50px;
+  width: 60px;
+  @media (max-width: 768px) {
+    right: 20px;
+    top: -80px;
+  }
+`;
+
+const Img3 = styled.img`
+  position: absolute;
+  bottom: -50px;
+  left: -100px;
+  width: 66px;
+  @media (max-width: 768px) {
+    left: 20px;
+    bottom: -100px;
+  }
+`;
+
+const Img4 = styled.img`
+  position: absolute;
+  bottom: -50px;
+  right: -50px;
+  width: 40px;
+  @media (max-width: 768px) {
+    right: 20px;
+  }
+`;
 
 export function AppsOverview() {
   const { t } = useTranslation();
@@ -39,30 +83,10 @@ export function AppsOverview() {
         </Link>
       </Flex>
 
-      <img
-        style={{ position: "absolute", top: 20, left: -20 }}
-        src="/images/drop1.png"
-        alt=""
-        width={32}
-      />
-      <img
-        style={{ position: "absolute", top: -50, right: -50 }}
-        src="/images/drop2.png"
-        alt=""
-        width={60}
-      />
-      <img
-        style={{ position: "absolute", bottom: -50, left: -100 }}
-        src="/images/drop3.png"
-        alt=""
-        width={66}
-      />
-      <img
-        style={{ position: "absolute", bottom: -50, right: -50 }}
-        src="/images/drop1.png"
-        alt=""
-        width={40}
-      />
+      <Img1 src="/images/drop1.png" alt="" />
+      <Img2 src="/images/drop2.png" alt="" />
+      <Img3 src="/images/drop3.png" alt="" />
+      <Img4 src="/images/drop1.png" alt="" />
     </Flex>
   );
 }
