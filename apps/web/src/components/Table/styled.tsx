@@ -82,7 +82,7 @@ export const LoadingIndicator = styled(Flex, {
 const TableRow = styled(Flex, {
   row: true,
   alignItems: "center",
-  // width: "fit-content",
+  width: "fit-content",
   borderColor: "$surface3Hovered",
   backgroundColor: "#00000010",
   borderStyle: "solid",
@@ -90,11 +90,10 @@ const TableRow = styled(Flex, {
   borderRadius: "$rounded12",
   marginTop: "$spacing12",
   minWidth: "100%",
-  width: "fit-content",
   height: "100%",
   $md: {
-    height: "60px",
-    // flexWrap: "wrap",
+    height: "fit-content",
+    flexWrap: "wrap",
   },
 });
 

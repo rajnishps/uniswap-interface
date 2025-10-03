@@ -192,7 +192,7 @@ export function Hero({ scrollToRef, transition }: HeroProps) {
         }}
       >
         <ValuePropCard
-          backgroundColor="#00000020"
+          backgroundColor="#0c796570"
           width={400}
           subtitle={"Total Value Locked (TVL)"}
           bodyText={"$42.7M+"}
@@ -210,7 +210,7 @@ export function Hero({ scrollToRef, transition }: HeroProps) {
         </ValuePropCard>
 
         <ValuePropCard
-          backgroundColor="#00000020"
+          backgroundColor="#0c796570"
           width={400}
           subtitle={"24h Trading Volume"}
           bodyText={"$7.9M+"}

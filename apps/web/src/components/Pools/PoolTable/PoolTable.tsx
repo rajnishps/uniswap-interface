@@ -391,28 +391,16 @@ export function PoolsTable({
   const columns = useMemo(() => {
     const columnHelper = createColumnHelper<PoolTableValues>();
     const filteredColumns = [
-      !media.lg
-        ? columnHelper.accessor((row) => row.index, {
-            id: "index",
-            size: 60,
-            header: () => (
-              <HeaderCell justifyContent="flex-start">
-                <Text variant="body3" color="$neutral2">
-                  #
-                </Text>
-              </HeaderCell>
-            ),
-            cell: (index) => (
-              <Cell
-                justifyContent="flex-start"
-                flexDirection="column"
-                loading={showLoadingSkeleton}
-              >
-                <TableText>{index.getValue?.()}</TableText>
-              </Cell>
-            ),
-          })
-        : null,
+      columnHelper.accessor((row) => row.index, {
+        id: "icon",
+        size: 60,
+        header: () => <HeaderCell justifyContent="flex-start"></HeaderCell>,
+        cell: (index) => (
+          <Cell flexDirection="column" loading={showLoadingSkeleton}>
+            <img src="/images/pool-pair.png" width="60" />
+          </Cell>
+        ),
+      }),
       columnHelper.accessor((row) => row.protocolVersion, {
         id: "protocolVersion",
         size: media.lg ? 170 : 180,
