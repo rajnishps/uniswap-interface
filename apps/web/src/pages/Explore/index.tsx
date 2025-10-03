@@ -109,8 +109,18 @@ const HeaderTab = tamaguiStyled(Text, {
   },
 });
 
+const TableFilterTabs = [
+  "All",
+  "Hyped Pools",
+  "Incentivized Pools",
+  "Smart Pools",
+  "Standard AMM",
+  "Concentrated Liquidity",
+];
+
 const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
   const { t } = useTranslation();
+  const [selectedTab, setSelectedTab] = useState("All");
   const media = useMedia();
   const tabNavRef = useRef<HTMLDivElement>(null);
   const resetManualOutage = useResetAtom(manualChainOutageAtom);
@@ -138,6 +148,10 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
     // scroll to tab navbar on initial page mount only
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const handleTabChange = (tab: string) => {
+    setSelectedTab(tab);
+  };
 
   useEffect(() => {
     const notFound = params.get("result") === ModalName.NotFound;
@@ -271,6 +285,39 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
               {/* {currentKey === ExploreTab.Tokens && <VolumeTimeFrameSelector />} */}
               {/* {currentKey === ExploreTab.Pools && <ProtocolFilter />} */}
             </Flex>
+          </Flex>
+          <Flex
+            row
+            // maxWidth={MAX_WIDTH_MEDIA_BREAKPOINT}
+            mx="auto"
+            mb="$spacing4"
+            alignItems="center"
+            width="100%"
+            mt="$spacing8"
+            gap="$spacing8"
+            $lg={{
+              row: false,
+              flexDirection: "column",
+              mx: "unset",
+              alignItems: "flex-start",
+            }}
+          >
+            {TableFilterTabs.map((tab) => (
+              <button
+                key={tab}
+                onClick={() => handleTabChange(tab)}
+                style={{
+                  padding: "8px 16px",
+                  borderRadius: "24px",
+                  backgroundColor:
+                    selectedTab === tab ? "#03F8C5" : "#00000030",
+                  color: selectedTab === tab ? "#000" : "#fff",
+                  border: "0px solid #000",
+                }}
+              >
+                {tab}
+              </button>
+            ))}
           </Flex>
           <Page />
         </Flex>
