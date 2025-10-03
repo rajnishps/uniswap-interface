@@ -6,6 +6,7 @@ import {
   Github,
   Telegram,
   Twitter,
+  Docs,
 } from "pages/Landing/components/Icons";
 import { Anchor, Flex, Separator, styled, Text } from "ui/src";
 import { iconSizes } from "ui/src/theme";
@@ -29,22 +30,27 @@ export function Socials({ iconSize }: { iconSize?: string }) {
   return (
     <Flex row gap="$spacing24" maxHeight={iconSize} alignItems="flex-start">
       <SocialIcon iconColor="#3fb3e0">
-        <Anchor href="https://t.me/hyperorbit" target="_blank">
+        <Anchor href="https://docs.hyperorbit.exchange" target="_blank">
+          <Docs size={iconSize} fill="inherit" />
+        </Anchor>
+      </SocialIcon>
+      <SocialIcon iconColor="#3fb3e0">
+        <Anchor href="https://t.me/HyperOrbit_Exc" target="_blank">
           <Telegram size={iconSize} fill="inherit" />
         </Anchor>
       </SocialIcon>
       <SocialIcon iconColor="#00C32B">
-        <Anchor href="https://github.com/hyperorbit" target="_blank">
+        <Anchor href="https://github.com/HyperOrbitExc" target="_blank">
           <Github size={iconSize} fill="inherit" />
         </Anchor>
       </SocialIcon>
       <SocialIcon iconColor="#20BAFF">
-        <Anchor href="https://x.com/hyperorbit" target="_blank">
+        <Anchor href="https://x.com/HyperOrbitExc" target="_blank">
           <Twitter size={iconSize} fill="inherit" />
         </Anchor>
       </SocialIcon>
       <SocialIcon iconColor="#5F51FF">
-        <Anchor href="https://discord.com/invite/hyperorbit" target="_blank">
+        <Anchor href="https://discord.gg/f5QWXenp" target="_blank">
           <Discord size={iconSize} fill="inherit" />
         </Anchor>
       </SocialIcon>
@@ -101,6 +107,7 @@ export function Footer() {
       maxWidth="100vw"
       width="100%"
       gap="$spacing24"
+      mt="$spacing60"
       alignItems="center"
       justifyContent="center"
       pt="$none"

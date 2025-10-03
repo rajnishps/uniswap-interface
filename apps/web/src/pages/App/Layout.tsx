@@ -2,6 +2,8 @@ import styled from "lib/styled-components";
 import { Body } from "pages/App/Body";
 import { Header } from "pages/App/Header";
 import { GRID_AREAS } from "pages/App/utils/shared";
+import { Footer } from "pages/Landing/sections/Footer";
+import { useLocation } from "react-router";
 import { breakpoints } from "ui/src/theme";
 
 const AppContainer = styled.div`
@@ -40,11 +42,14 @@ const AppBody = styled.div`
 `;
 
 export function AppLayout() {
+  const { pathname } = useLocation();
+
   return (
     <AppContainer>
       <Header />
       <AppBody>
         <Body />
+        {pathname !== "/" && <Footer />}
       </AppBody>
     </AppContainer>
   );
