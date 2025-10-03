@@ -81,19 +81,19 @@ export function CompanyMenu() {
                   data-testid={TestID.NavUniswapLogo}
                 >
                   {/* <NavIcon /> */}
-                  {isLargeScreen ? (
-                    <HyperOrbitLogo height={24} />
-                  ) : (
+                  {/* {isLargeScreen ? ( */}
+                  <HyperOrbitLogo height={24} />
+                  {/* ) : (
                     <HyperOrbitLogoIcon height={24} />
-                  )}
+                  )} */}
                 </Flex>
               </Link>
               {(media.md || isTouchDevice) && (
                 <Hamburger
+                  ml="$spacing60"
                   size={22}
                   color="$neutral2"
                   cursor="pointer"
-                  ml="16px"
                 />
               )}
               {/* {!media.md && !isTouchDevice && (

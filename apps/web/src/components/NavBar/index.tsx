@@ -66,27 +66,34 @@ export default function Navbar() {
   return (
     <Nav>
       <UnpositionedFlex p="$spacing40" row centered width="100%">
-        <Left>
+        {isSmallScreen ? (
           <CompanyMenu />
-          {/* {areTabsVisible && <Tabs />} */}
-        </Left>
-        <Center>
-          {/* <CompanyMenu /> */}
-          {areTabsVisible && <Tabs />}
-        </Center>
+        ) : (
+          <>
+            <Left>
+              <CompanyMenu />
+              {/* {areTabsVisible && <Tabs />} */}
+            </Left>
+            <Center>
+              {/* <CompanyMenu /> */}
+              {areTabsVisible && <Tabs />}
+            </Center>
+          </>
+        )}
 
         {/* {isSearchBarVisible && <SearchBar />} */}
-
-        <Right>
-          {/* {!isSearchBarVisible && <SearchBar />}
-          {!isEmbeddedWalletEnabled && isLandingPage && !isSmallScreen && (
-            <NewUserCTAButton />
-          )} */}
-          {/* {!account.isConnected && <PreferenceMenu />} */}
-          {isTestnetModeEnabled && <TestnetModeTooltip />}
-          {/* {isEmbeddedWalletEnabled && !account.address && <NewUserCTAButton />} */}
-          <Web3Status />
-        </Right>
+        {!isSmallScreen && (
+          <Right>
+            {/* {!isSearchBarVisible && <SearchBar />}
+    {!isEmbeddedWalletEnabled && isLandingPage && !isSmallScreen && (
+      <NewUserCTAButton />
+    )} */}
+            {/* {!account.isConnected && <PreferenceMenu />} */}
+            {isTestnetModeEnabled && <TestnetModeTooltip />}
+            {/* {isEmbeddedWalletEnabled && !account.address && <NewUserCTAButton />} */}
+            <Web3Status />
+          </Right>
+        )}
       </UnpositionedFlex>
     </Nav>
   );
