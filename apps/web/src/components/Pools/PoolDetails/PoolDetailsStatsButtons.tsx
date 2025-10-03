@@ -107,8 +107,8 @@ const PoolButton = ({
     <Button
       onPress={onPress}
       icon={icon}
-      variant={isOpen ? "default" : "branded"}
-      emphasis={media.xl ? "primary" : "secondary"}
+      variant={isOpen ? "default" : "default"}
+      emphasis={media.xl ? "secondary" : "secondary"}
       data-testid={dataTestId}
     >
       {children}
@@ -210,7 +210,7 @@ export function PoolDetailsStatsButtons({
   };
   const [swapModalOpen, toggleSwapModalOpen] = useReducer(
     (state) => !state,
-    false
+    true
   );
 
   const media = useMedia();

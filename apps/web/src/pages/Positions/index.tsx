@@ -1,54 +1,63 @@
-import { PositionStatus, ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import PROVIDE_LIQUIDITY from 'assets/images/provideLiquidity.png'
-import tokenLogo from 'assets/images/token-logo.png'
-import V4_HOOK from 'assets/images/v4Hooks.png'
-import { ExpandoRow } from 'components/AccountDrawer/MiniPortfolio/ExpandoRow'
-import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
-import { ExternalArrowLink } from 'components/Liquidity/ExternalArrowLink'
-import { LiquidityPositionCard, LiquidityPositionCardLoader } from 'components/Liquidity/LiquidityPositionCard'
-import { LpIncentiveClaimModal } from 'components/Liquidity/LPIncentives/LpIncentiveClaimModal'
-import LpIncentiveRewardsCard from 'components/Liquidity/LPIncentives/LpIncentiveRewardsCard'
-import { PositionsHeader } from 'components/Liquidity/PositionsHeader'
-import { PositionInfo } from 'components/Liquidity/types'
-import { getPositionUrl } from 'components/Liquidity/utils/getPositionUrl'
-import { parseRestPosition } from 'components/Liquidity/utils/parseFromRest'
-import { useAccount } from 'hooks/useAccount'
-import { useInfiniteScroll } from 'hooks/useInfiniteScroll'
-import { useLpIncentives } from 'hooks/useLpIncentives'
-import { atom, useAtom } from 'jotai'
-import { TopPools } from 'pages/Positions/TopPools'
-import { useMemo, useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import { Link, useNavigate } from 'react-router'
-import { FixedSizeList } from 'react-window'
-import { usePendingLPTransactionsChangeListener } from 'state/transactions/hooks'
-import { useRequestPositionsForSavedPairs } from 'state/user/hooks'
-import { ClickableTamaguiStyle } from 'theme/components/styles'
-import { Anchor, Button, Flex, Text, useMedia } from 'ui/src'
-import { CloseIconWithHover } from 'ui/src/components/icons/CloseIconWithHover'
-import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
-import { Pools } from 'ui/src/components/icons/Pools'
-import { Wallet } from 'ui/src/components/icons/Wallet'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { useGetPositionsInfiniteQuery } from 'uniswap/src/data/rest/getPositions'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { InterfacePageName, UniswapEventName } from 'uniswap/src/features/telemetry/constants'
-import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import Trace from 'uniswap/src/features/telemetry/Trace'
-import { usePositionVisibilityCheck } from 'uniswap/src/features/visibility/hooks/usePositionVisibilityCheck'
+import {
+  PositionStatus,
+  ProtocolVersion,
+} from "@uniswap/client-pools/dist/pools/v1/types_pb";
+import PROVIDE_LIQUIDITY from "assets/images/provideLiquidity.png";
+import tokenLogo from "assets/images/token-logo.png";
+import V4_HOOK from "assets/images/v4Hooks.png";
+import { ExpandoRow } from "components/AccountDrawer/MiniPortfolio/ExpandoRow";
+import { useAccountDrawer } from "components/AccountDrawer/MiniPortfolio/hooks";
+import { ExternalArrowLink } from "components/Liquidity/ExternalArrowLink";
+import {
+  LiquidityPositionCard,
+  LiquidityPositionCardLoader,
+} from "components/Liquidity/LiquidityPositionCard";
+import { LpIncentiveClaimModal } from "components/Liquidity/LPIncentives/LpIncentiveClaimModal";
+import LpIncentiveRewardsCard from "components/Liquidity/LPIncentives/LpIncentiveRewardsCard";
+import { PositionsHeader } from "components/Liquidity/PositionsHeader";
+import { PositionInfo } from "components/Liquidity/types";
+import { getPositionUrl } from "components/Liquidity/utils/getPositionUrl";
+import { parseRestPosition } from "components/Liquidity/utils/parseFromRest";
+import { useAccount } from "hooks/useAccount";
+import { useInfiniteScroll } from "hooks/useInfiniteScroll";
+import { useLpIncentives } from "hooks/useLpIncentives";
+import { atom, useAtom } from "jotai";
+import { TopPools } from "pages/Positions/TopPools";
+import { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { Link, useNavigate } from "react-router";
+import { FixedSizeList } from "react-window";
+import { usePendingLPTransactionsChangeListener } from "state/transactions/hooks";
+import { useRequestPositionsForSavedPairs } from "state/user/hooks";
+import { ClickableTamaguiStyle } from "theme/components/styles";
+import { Anchor, Button, Flex, Text, useMedia } from "ui/src";
+import { CloseIconWithHover } from "ui/src/components/icons/CloseIconWithHover";
+import { InfoCircleFilled } from "ui/src/components/icons/InfoCircleFilled";
+import { Pools } from "ui/src/components/icons/Pools";
+import { Wallet } from "ui/src/components/icons/Wallet";
+import { uniswapUrls } from "uniswap/src/constants/urls";
+import { useGetPositionsInfiniteQuery } from "uniswap/src/data/rest/getPositions";
+import { useEnabledChains } from "uniswap/src/features/chains/hooks/useEnabledChains";
+import { UniverseChainId } from "uniswap/src/features/chains/types";
+import { FeatureFlags } from "uniswap/src/features/gating/flags";
+import { useFeatureFlag } from "uniswap/src/features/gating/hooks";
+import {
+  InterfacePageName,
+  UniswapEventName,
+} from "uniswap/src/features/telemetry/constants";
+import { sendAnalyticsEvent } from "uniswap/src/features/telemetry/send";
+import Trace from "uniswap/src/features/telemetry/Trace";
+import { usePositionVisibilityCheck } from "uniswap/src/features/visibility/hooks/usePositionVisibilityCheck";
 
 // The BE limits the number of positions by chain and protocol version.
 // PAGE_SIZE=25 means the limit is at most 25 positions * x chains * y protocol versions.
 // TODO: LP-4: Improve performance by loading pageSize limit positions at a time.
-const PAGE_SIZE = 25
+const PAGE_SIZE = 25;
 
 function DisconnectedWalletView() {
-  const { t } = useTranslation()
-  const navigate = useNavigate()
-  const accountDrawer = useAccountDrawer()
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+  const accountDrawer = useAccountDrawer();
 
   return (
     <Flex gap="$spacing12">
@@ -61,45 +70,61 @@ function DisconnectedWalletView() {
         borderWidth="$spacing1"
         borderStyle="solid"
       >
-        <Flex padding="$padding12" borderRadius="$rounded12" backgroundColor="$surface3">
+        <Flex
+          padding="$padding12"
+          borderRadius="$rounded12"
+          backgroundColor="$surface3"
+        >
           <Wallet size="$icon.24" color="$neutral1" />
         </Flex>
-        <Text variant="subheading1">{t('positions.welcome.connect.wallet')}</Text>
+        <Text variant="subheading1">
+          {t("positions.welcome.connect.wallet")}
+        </Text>
         <Text variant="body2" color="$neutral2">
-          {t('positions.welcome.connect.description')}
+          {t("positions.welcome.connect.description")}
         </Text>
         <Flex row gap="$gap8">
-          <Button variant="default" size="small" emphasis="secondary" onPress={() => navigate('/positions/create/v4')}>
-            {t('position.new')}
+          <Button
+            variant="default"
+            size="small"
+            emphasis="secondary"
+            onPress={() => navigate("/positions/create/v3")}
+          >
+            {t("position.new")}
           </Button>
-          <Button variant="default" size="small" width={160} onPress={accountDrawer.open}>
-            {t('common.connectWallet.button')}
+          <Button
+            variant="default"
+            size="small"
+            width={160}
+            onPress={accountDrawer.open}
+          >
+            {t("common.connectWallet.button")}
           </Button>
         </Flex>
       </Flex>
       <Flex gap="$gap20" mb="$spacing24">
-        <Flex row gap="$gap12" $sm={{ flexDirection: 'column' }}>
+        <Flex row gap="$gap12" $sm={{ flexDirection: "column" }}>
           <LearnMoreTile
             width="100%"
             img={PROVIDE_LIQUIDITY}
-            text={t('liquidity.provideOnProtocols')}
+            text={t("liquidity.provideOnProtocols")}
             link={uniswapUrls.helpArticleUrls.providingLiquidityInfo}
           />
           <LearnMoreTile
             width="100%"
             img={V4_HOOK}
-            text={t('liquidity.hooks')}
+            text={t("liquidity.hooks")}
             link={uniswapUrls.helpArticleUrls.v4HooksInfo}
           />
         </Flex>
       </Flex>
     </Flex>
-  )
+  );
 }
 
 function EmptyPositionsView() {
-  const { t } = useTranslation()
-  const navigate = useNavigate()
+  const { t } = useTranslation();
+  const navigate = useNavigate();
   return (
     <Flex gap="$spacing12">
       <Flex
@@ -111,27 +136,41 @@ function EmptyPositionsView() {
         borderWidth="$spacing1"
         borderStyle="solid"
         $platform-web={{
-          textAlign: 'center',
+          textAlign: "center",
         }}
       >
-        <Flex padding="$padding12" borderRadius="$rounded12" backgroundColor="$surface3">
+        <Flex
+          padding="$padding12"
+          borderRadius="$rounded12"
+          backgroundColor="$surface3"
+        >
           <Pools size="$icon.24" color="$neutral1" />
         </Flex>
-        <Text variant="subheading1">{t('positions.noPositions.title')}</Text>
+        <Text variant="subheading1">{t("positions.noPositions.title")}</Text>
         <Text variant="body2" color="$neutral2" maxWidth={420}>
-          {t('positions.noPositions.description')}
+          {t("positions.noPositions.description")}
         </Text>
         <Flex row gap="$gap8">
-          <Button variant="default" size="small" emphasis="secondary" onPress={() => navigate('/explore/pools')}>
-            {t('pools.explore')}
+          <Button
+            variant="default"
+            size="small"
+            emphasis="secondary"
+            onPress={() => navigate("/explore/pools")}
+          >
+            {t("pools.explore")}
           </Button>
-          <Button variant="default" size="small" width={160} onPress={() => navigate('/positions/create/v4')}>
-            {t('position.new')}
+          <Button
+            variant="default"
+            size="small"
+            width={160}
+            onPress={() => navigate("/positions/create/v3")}
+          >
+            {t("position.new")}
           </Button>
         </Flex>
       </Flex>
     </Flex>
-  )
+  );
 }
 
 function LearnMoreTile({
@@ -140,10 +179,10 @@ function LearnMoreTile({
   link,
   width = 344,
 }: {
-  img: string
-  text: string
-  link?: string
-  width?: number | string
+  img: string;
+  text: string;
+  link?: string;
+  width?: number | string;
 }) {
   return (
     <Anchor
@@ -153,7 +192,10 @@ function LearnMoreTile({
       rel="noopener noreferrer"
       width={width}
       {...ClickableTamaguiStyle}
-      hoverStyle={{ backgroundColor: '$surface1Hovered', borderColor: '$surface3Hovered' }}
+      hoverStyle={{
+        backgroundColor: "$surface1Hovered",
+        borderColor: "$surface3Hovered",
+      }}
     >
       <Flex
         row
@@ -165,16 +207,26 @@ function LearnMoreTile({
         gap="$gap16"
         overflow="hidden"
       >
-        <img src={img} style={{ objectFit: 'cover', width: '72px', height: '72px' }} />
+        <img
+          src={img}
+          style={{ objectFit: "cover", width: "72px", height: "72px" }}
+        />
         <Text variant="subheading2">{text}</Text>
       </Flex>
     </Anchor>
-  )
+  );
 }
 
-const chainFilterAtom = atom<UniverseChainId | null>(null)
-const versionFilterAtom = atom<ProtocolVersion[]>([ProtocolVersion.V4, ProtocolVersion.V3, ProtocolVersion.V2])
-const statusFilterAtom = atom<PositionStatus[]>([PositionStatus.IN_RANGE, PositionStatus.OUT_OF_RANGE])
+const chainFilterAtom = atom<UniverseChainId | null>(null);
+const versionFilterAtom = atom<ProtocolVersion[]>([
+  ProtocolVersion.V4,
+  ProtocolVersion.V3,
+  ProtocolVersion.V2,
+]);
+const statusFilterAtom = atom<PositionStatus[]>([
+  PositionStatus.IN_RANGE,
+  PositionStatus.OUT_OF_RANGE,
+]);
 
 function VirtualizedPositionsList({
   positions,
@@ -182,22 +234,26 @@ function VirtualizedPositionsList({
   hasNextPage,
   isFetching,
 }: {
-  positions: PositionInfo[]
-  onLoadMore: () => void
-  hasNextPage: boolean
-  isFetching: boolean
+  positions: PositionInfo[];
+  onLoadMore: () => void;
+  hasNextPage: boolean;
+  isFetching: boolean;
 }) {
-  const { t } = useTranslation()
-  const media = useMedia()
+  const { t } = useTranslation();
+  const media = useMedia();
   const positionItemHeight = useMemo(() => {
-    return media.sm ? 360 : media.md ? 290 : 200
-  }, [media])
+    return media.sm ? 360 : media.md ? 290 : 200;
+  }, [media]);
 
   const listHeight = useMemo(() => {
-    return positions.length * positionItemHeight
-  }, [positionItemHeight, positions.length])
+    return positions.length * positionItemHeight;
+  }, [positionItemHeight, positions.length]);
 
-  const { sentinelRef } = useInfiniteScroll({ onLoadMore, hasNextPage, isFetching })
+  const { sentinelRef } = useInfiniteScroll({
+    onLoadMore,
+    hasNextPage,
+    isFetching,
+  });
 
   return (
     <Flex grow>
@@ -207,53 +263,65 @@ function VirtualizedPositionsList({
         itemCount={positions.length}
         itemSize={positionItemHeight}
         itemData={positions}
-        itemKey={(index) => `${positions[index].poolId}-${positions[index].tokenId}-${positions[index].chainId}`}
+        itemKey={(index) =>
+          `${positions[index].poolId}-${positions[index].tokenId}-${positions[index].chainId}`
+        }
       >
         {({ index, style, data }) => {
-          const position = data[index]
+          const position = data[index];
           return (
             <Flex style={style}>
               <Link
                 key={`${position.poolId}-${position.tokenId}-${position.chainId}`}
-                style={{ textDecoration: 'none' }}
+                style={{ textDecoration: "none" }}
                 to={getPositionUrl(position)}
               >
-                <LiquidityPositionCard showVisibilityOption liquidityPosition={position} showMigrateButton />
+                <LiquidityPositionCard
+                  showVisibilityOption
+                  liquidityPosition={position}
+                  showMigrateButton
+                />
               </Link>
             </Flex>
-          )
+          );
         }}
       </FixedSizeList>
 
       {/* Sentinel element to trigger loading more when it comes into view */}
       {hasNextPage && (
-        <Flex ref={sentinelRef} height={20} justifyContent="center" alignItems="center">
+        <Flex
+          ref={sentinelRef}
+          height={20}
+          justifyContent="center"
+          alignItems="center"
+        >
           {isFetching && (
             <Text variant="body3" color="$neutral2">
-              {t('liquidityPool.positions.loadingMore')}
+              {t("liquidityPool.positions.loadingMore")}
             </Text>
           )}
         </Flex>
       )}
     </Flex>
-  )
+  );
 }
 
 export default function Pool() {
-  const account = useAccount()
-  const { t } = useTranslation()
-  const { address, isConnected } = account
+  const account = useAccount();
+  const { t } = useTranslation();
+  const { address, isConnected } = account;
 
-  const isLPIncentivesEnabled = useFeatureFlag(FeatureFlags.LpIncentives) && isConnected
+  const isLPIncentivesEnabled =
+    useFeatureFlag(FeatureFlags.LpIncentives) && isConnected;
 
-  const [chainFilter, setChainFilter] = useAtom(chainFilterAtom)
-  const { chains: currentModeChains } = useEnabledChains()
-  const [versionFilter, setVersionFilter] = useAtom(versionFilterAtom)
-  const [statusFilter, setStatusFilter] = useAtom(statusFilterAtom)
-  const [closedCTADismissed, setClosedCTADismissed] = useState(false)
+  const [chainFilter, setChainFilter] = useAtom(chainFilterAtom);
+  const { chains: currentModeChains } = useEnabledChains();
+  const [versionFilter, setVersionFilter] = useAtom(versionFilterAtom);
+  const [statusFilter, setStatusFilter] = useAtom(statusFilterAtom);
+  const [closedCTADismissed, setClosedCTADismissed] = useState(false);
 
-  const isPositionVisible = usePositionVisibilityCheck()
-  const [showHiddenPositions, setShowHiddenPositions] = useState(false)
+  const isPositionVisible = usePositionVisibilityCheck();
+  const [showHiddenPositions, setShowHiddenPositions] = useState(false);
 
   const {
     isPendingTransaction,
@@ -264,57 +332,79 @@ export default function Pool() {
     setTokenRewards,
     onTransactionSuccess,
     hasCollectedRewards,
-  } = useLpIncentives()
+  } = useLpIncentives();
 
-  const { data, isPlaceholderData, refetch, isLoading, fetchNextPage, hasNextPage, isFetching } =
-    useGetPositionsInfiniteQuery(
-      {
-        address,
-        chainIds: chainFilter ? [chainFilter] : currentModeChains,
-        positionStatuses: statusFilter,
-        protocolVersions: versionFilter,
-        pageSize: PAGE_SIZE,
-        pageToken: '',
-        includeHidden: true,
-      },
-      !isConnected,
-    )
+  const {
+    data,
+    isPlaceholderData,
+    refetch,
+    isLoading,
+    fetchNextPage,
+    hasNextPage,
+    isFetching,
+  } = useGetPositionsInfiniteQuery(
+    {
+      address,
+      chainIds: chainFilter ? [chainFilter] : currentModeChains,
+      positionStatuses: statusFilter,
+      protocolVersions: versionFilter,
+      pageSize: PAGE_SIZE,
+      pageToken: "",
+      includeHidden: true,
+    },
+    !isConnected
+  );
 
   const loadedPositions = useMemo(() => {
-    return data?.pages.flatMap((positionsResponse) => positionsResponse.positions) || []
-  }, [data])
+    return (
+      data?.pages.flatMap((positionsResponse) => positionsResponse.positions) ||
+      []
+    );
+  }, [data]);
 
-  const savedPositions = useRequestPositionsForSavedPairs()
+  const savedPositions = useRequestPositionsForSavedPairs();
 
-  const isLoadingPositions = !!account.address && (isLoading || !data)
+  const isLoadingPositions = !!account.address && (isLoading || !data);
   const combinedPositions = useMemo(() => {
     return [
       ...loadedPositions,
       ...savedPositions
         .filter((position) => {
-          const matchesChain = !chainFilter || position.data?.position?.chainId === chainFilter
-          const matchesStatus = position.data?.position?.status && statusFilter.includes(position.data.position.status)
+          const matchesChain =
+            !chainFilter || position.data?.position?.chainId === chainFilter;
+          const matchesStatus =
+            position.data?.position?.status &&
+            statusFilter.includes(position.data.position.status);
           const matchesVersion =
-            position.data?.position?.protocolVersion && versionFilter.includes(position.data.position.protocolVersion)
-          return matchesChain && matchesStatus && matchesVersion
+            position.data?.position?.protocolVersion &&
+            versionFilter.includes(position.data.position.protocolVersion);
+          return matchesChain && matchesStatus && matchesVersion;
         })
         .map((p) => p.data?.position),
     ]
       .map(parseRestPosition)
       .filter((position): position is PositionInfo => !!position)
       .reduce<PositionInfo[]>((unique, position) => {
-        const positionId = `${position.poolId}-${position.tokenId}-${position.chainId}`
-        const exists = unique.some((p) => `${p.poolId}-${p.tokenId}-${p.chainId}` === positionId)
+        const positionId = `${position.poolId}-${position.tokenId}-${position.chainId}`;
+        const exists = unique.some(
+          (p) => `${p.poolId}-${p.tokenId}-${p.chainId}` === positionId
+        );
         if (!exists) {
-          unique.push(position)
+          unique.push(position);
         }
-        return unique
-      }, [])
-  }, [loadedPositions, savedPositions, chainFilter, statusFilter, versionFilter])
+        return unique;
+      }, []);
+  }, [
+    loadedPositions,
+    savedPositions,
+    chainFilter,
+    statusFilter,
+    versionFilter,
+  ]);
 
   const { visiblePositions, hiddenPositions } = useMemo(() => {
-    const visiblePositions: PositionInfo[] = []
-    const hiddenPositions: PositionInfo[] = []
+    const visiblePositions: PositionInfo[] = [];
+    const hiddenPositions: PositionInfo[] = [];
 
     combinedPositions.forEach((position) => {
       const isVisible = isPositionVisible({
@@ -322,82 +412,101 @@ export default function Pool() {
         tokenId: position.tokenId,
         chainId: position.chainId,
         isFlaggedSpam: position.isHidden,
-      })
+      });
 
       if (isVisible) {
-        visiblePositions.push(position)
+        visiblePositions.push(position);
       } else {
-        hiddenPositions.push(position)
+        hiddenPositions.push(position);
       }
-    })
+    });
 
-    return { visiblePositions, hiddenPositions }
-  }, [combinedPositions, isPositionVisible])
+    return { visiblePositions, hiddenPositions };
+  }, [combinedPositions, isPositionVisible]);
 
-  usePendingLPTransactionsChangeListener(refetch)
+  usePendingLPTransactionsChangeListener(refetch);
 
   const loadMorePositions = () => {
     if (hasNextPage && !isFetching) {
-      fetchNextPage()
+      fetchNextPage();
     }
-  }
+  };
 
   return (
     <Trace logImpression page={InterfacePageName.Positions}>
       <Flex
         row
         justifyContent="space-between"
-        $xl={{ flexDirection: 'column', gap: '$gap16' }}
+        $xl={{ flexDirection: "column", gap: "$gap16" }}
         width="100%"
         gap={20}
         py="$spacing24"
         px="$spacing40"
-        $lg={{ px: '$spacing20' }}
+        $lg={{ px: "$spacing20" }}
       >
-        <Flex grow shrink gap="$spacing24" maxWidth={740} $xl={{ maxWidth: '100%' }}>
+        <Flex
+          grow
+          shrink
+          gap="$spacing24"
+          maxWidth={740}
+          $xl={{ maxWidth: "100%" }}
+        >
           {isLPIncentivesEnabled && (
             <LpIncentiveRewardsCard
               walletAddress={account.address}
               onCollectRewards={() => {
-                sendAnalyticsEvent(UniswapEventName.LpIncentiveCollectRewardsButtonClicked)
-                openModal()
+                sendAnalyticsEvent(
+                  UniswapEventName.LpIncentiveCollectRewardsButtonClicked
+                );
+                openModal();
               }}
               setTokenRewards={setTokenRewards}
               initialHasCollectedRewards={hasCollectedRewards}
             />
           )}
-          <Flex row justifyContent="space-between" alignItems="center" mt={isLPIncentivesEnabled ? '$spacing28' : 0}>
+          <Flex
+            row
+            justifyContent="space-between"
+            alignItems="center"
+            mt={isLPIncentivesEnabled ? "$spacing28" : 0}
+          >
             <PositionsHeader
               showFilters={account.isConnected}
               selectedChain={chainFilter}
               selectedVersions={versionFilter}
               selectedStatus={statusFilter}
               onChainChange={(selectedChain) => {
-                setChainFilter(selectedChain ?? null)
+                setChainFilter(selectedChain ?? null);
               }}
               onVersionChange={(toggledVersion) => {
                 setVersionFilter((prevVersionFilter) => {
                   if (prevVersionFilter.includes(toggledVersion)) {
-                    return prevVersionFilter.filter((v) => v !== toggledVersion)
+                    return prevVersionFilter.filter(
+                      (v) => v !== toggledVersion
+                    );
                   } else {
-                    return [...prevVersionFilter, toggledVersion]
+                    return [...prevVersionFilter, toggledVersion];
                   }
-                })
+                });
               }}
               onStatusChange={(toggledStatus) => {
                 setStatusFilter((prevStatusFilter) => {
                   if (prevStatusFilter.includes(toggledStatus)) {
-                    return prevStatusFilter.filter((s) => s !== toggledStatus)
+                    return prevStatusFilter.filter((s) => s !== toggledStatus);
                   } else {
-                    return [...prevStatusFilter, toggledStatus]
+                    return [...prevStatusFilter, toggledStatus];
                   }
-                })
+                });
               }}
             />
           </Flex>
           {!isLoadingPositions ? (
             combinedPositions.length > 0 ? (
-              <Flex gap="$gap16" mb="$spacing16" opacity={isPlaceholderData ? 0.6 : 1}>
+              <Flex
+                gap="$gap16"
+                mb="$spacing16"
+                opacity={isPlaceholderData ? 0.6 : 1}
+              >
                 <VirtualizedPositionsList
                   positions={visiblePositions}
                   onLoadMore={loadMorePositions}
@@ -422,39 +531,54 @@ export default function Pool() {
               ))}
             </Flex>
           )}
-          {!statusFilter.includes(PositionStatus.CLOSED) && !closedCTADismissed && account.address && (
+          {!statusFilter.includes(PositionStatus.CLOSED) &&
+            !closedCTADismissed &&
+            account.address && (
+              <Flex
+                borderWidth="$spacing1"
+                borderColor="$surface3"
+                borderRadius="$rounded12"
+                mb="$spacing24"
+                p="$padding12"
+                gap="$gap12"
+                row
+                centered
+              >
+                <Flex height="100%">
+                  <InfoCircleFilled color="$neutral2" size="$icon.20" />
+                </Flex>
+                <Flex grow flexBasis={0}>
+                  <Text variant="body3" color="$neutral1">
+                    {t("pool.closedCTA.title")}
+                  </Text>
+                  <Text variant="body3" color="$neutral2">
+                    {t("pool.closedCTA.description")}
+                  </Text>
+                </Flex>
+                <CloseIconWithHover
+                  onClose={() => setClosedCTADismissed(true)}
+                  size="$icon.20"
+                />
+              </Flex>
+            )}
+          {isConnected && (
             <Flex
-              borderWidth="$spacing1"
-              borderColor="$surface3"
-              borderRadius="$rounded12"
-              mb="$spacing24"
-              p="$padding12"
-              gap="$gap12"
               row
               centered
+              $sm={{ flexDirection: "column", alignItems: "flex-start" }}
+              mb="$spacing24"
+              gap="$gap4"
             >
-              <Flex height="100%">
-                <InfoCircleFilled color="$neutral2" size="$icon.20" />
-              </Flex>
-              <Flex grow flexBasis={0}>
-                <Text variant="body3" color="$neutral1">
-                  {t('pool.closedCTA.title')}
-                </Text>
-                <Text variant="body3" color="$neutral2">
-                  {t('pool.closedCTA.description')}
-                </Text>
-              </Flex>
-              <CloseIconWithHover onClose={() => setClosedCTADismissed(true)} size="$icon.20" />
-            </Flex>
-          )}
-          {isConnected && (
-            <Flex row centered $sm={{ flexDirection: 'column', alignItems: 'flex-start' }} mb="$spacing24" gap="$gap4">
               <Text variant="body3" color="$neutral2">
-                {t('pool.import.link.description')}
+                {t("pool.import.link.description")}
               </Text>
               <Anchor href="/pools/v2/find" textDecorationLine="none">
-                <Text variant="body3" color="$neutral1" {...ClickableTamaguiStyle}>
-                  {t('pool.import.positions.v2')}
+                <Text
+                  variant="body3"
+                  color="$neutral1"
+                  {...ClickableTamaguiStyle}
+                >
+                  {t("pool.import.positions.v2")}
                 </Text>
               </Anchor>
             </Flex>
@@ -464,21 +588,23 @@ export default function Pool() {
           <TopPools chainId={chainFilter} />
           {isConnected && (
             <Flex gap="$gap20" mb="$spacing24">
-              <Text variant="subheading1">{t('liquidity.learnMoreLabel')}</Text>
+              <Text variant="subheading1">{t("liquidity.learnMoreLabel")}</Text>
               <Flex gap="$gap12">
                 <LearnMoreTile
                   img={PROVIDE_LIQUIDITY}
-                  text={t('liquidity.provideOnProtocols')}
+                  text={t("liquidity.provideOnProtocols")}
                   link={uniswapUrls.helpArticleUrls.providingLiquidityInfo}
                 />
                 <LearnMoreTile
                   img={V4_HOOK}
-                  text={t('liquidity.hooks')}
+                  text={t("liquidity.hooks")}
                   link={uniswapUrls.helpArticleUrls.v4HooksInfo}
                 />
               </Flex>
-              <ExternalArrowLink href={uniswapUrls.helpArticleUrls.positionsLearnMore}>
-                {t('common.button.learn')}
+              <ExternalArrowLink
+                href={uniswapUrls.helpArticleUrls.positionsLearnMore}
+              >
+                {t("common.button.learn")}
               </ExternalArrowLink>
             </Flex>
           )}
@@ -489,10 +615,13 @@ export default function Pool() {
           isOpen={isModalOpen}
           onClose={() => closeModal()}
           onSuccess={() => {
-            sendAnalyticsEvent(UniswapEventName.LpIncentiveCollectRewardsSuccess, {
-              token_rewards: tokenRewards,
-            })
-            onTransactionSuccess()
+            sendAnalyticsEvent(
+              UniswapEventName.LpIncentiveCollectRewardsSuccess,
+              {
+                token_rewards: tokenRewards,
+              }
+            );
+            onTransactionSuccess();
           }}
           tokenRewards={tokenRewards}
           isPendingTransaction={isPendingTransaction}
@@ -500,36 +629,44 @@ export default function Pool() {
         />
       )}
     </Trace>
-  )
+  );
 }
 
 interface HiddenPositionsProps {
-  showHiddenPositions: boolean
-  setShowHiddenPositions: (showHiddenPositions: boolean) => void
-  hiddenPositions: PositionInfo[]
+  showHiddenPositions: boolean;
+  setShowHiddenPositions: (showHiddenPositions: boolean) => void;
+  hiddenPositions: PositionInfo[];
 }
 
-function HiddenPositions({ showHiddenPositions, setShowHiddenPositions, hiddenPositions }: HiddenPositionsProps) {
-  const { t } = useTranslation()
+function HiddenPositions({
+  showHiddenPositions,
+  setShowHiddenPositions,
+  hiddenPositions,
+}: HiddenPositionsProps) {
+  const { t } = useTranslation();
   return (
     <ExpandoRow
       isExpanded={showHiddenPositions}
       toggle={() => setShowHiddenPositions(!showHiddenPositions)}
       numItems={hiddenPositions.length}
-      title={t('common.hidden')}
+      title={t("common.hidden")}
       enableOverflow
     >
       <Flex gap="$gap16">
         {hiddenPositions.map((position) => (
           <Link
             key={`${position.poolId}-${position.tokenId}-${position.chainId}`}
-            style={{ textDecoration: 'none' }}
+            style={{ textDecoration: "none" }}
             to={getPositionUrl(position)}
           >
-            <LiquidityPositionCard showVisibilityOption liquidityPosition={position} isVisible={false} />
+            <LiquidityPositionCard
+              showVisibilityOption
+              liquidityPosition={position}
+              isVisible={false}
+            />
           </Link>
         ))}
       </Flex>
     </ExpandoRow>
-  )
+  );
 }

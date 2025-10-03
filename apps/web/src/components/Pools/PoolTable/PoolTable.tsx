@@ -109,6 +109,33 @@ function PoolDescription({
   );
 }
 
+const SwapIcon = () => {
+  return (
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 14 14"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M2.3335 7V5.25C2.3335 4.78587 2.51787 4.34075 2.84606 4.01256C3.17425 3.68437 3.61937 3.5 4.0835 3.5H11.6668M11.6668 3.5L9.91683 1.75M11.6668 3.5L9.91683 5.25"
+        stroke="#DADADA"
+        stroke-width="1.16667"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      <path
+        d="M11.6668 7V8.75C11.6668 9.21413 11.4825 9.65925 11.1543 9.98744C10.8261 10.3156 10.381 10.5 9.91683 10.5H2.3335M2.3335 10.5L4.0835 12.25M2.3335 10.5L4.0835 8.75"
+        stroke="#DADADA"
+        stroke-width="1.16667"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+  );
+};
+
 // Used to keep track of sorting state for Pool Tables
 // declared as atomWithReset because sortMethodAtom and sortAscendingAtom are shared across multiple Pool Table instances - want to be able to reset sorting state between instances
 export const sortMethodAtom = atomWithReset<PoolSortFields>(PoolSortFields.TVL);
@@ -554,7 +581,9 @@ export function PoolsTable({
               >
                 <button
                   style={{
-                    backgroundColor: "white",
+                    cursor: "pointer",
+
+                    backgroundColor: "#03F8C5",
                     color: "black",
                     height: "32px",
                     width: "140px",
@@ -589,13 +618,19 @@ export function PoolsTable({
               >
                 <button
                   style={{
+                    cursor: "pointer",
                     color: "white",
                     backgroundColor: "black",
                     height: "32px",
-                    width: "80px",
+                    width: "90px",
                     borderRadius: "8px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: "4px",
                   }}
                 >
+                  <SwapIcon />
                   Swap
                 </button>
               </Cell>
